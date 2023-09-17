@@ -17,7 +17,6 @@ class MYPROJECT_API AMyCameraActor : public ACameraActor
 public:
 	// Sets default values for this pawn's properties
 	AMyCameraActor();
-
 	
 
 protected:

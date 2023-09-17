@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "MyPawn.h"
 #include "MyPlayerController.generated.h"
 
 /**
@@ -14,6 +15,8 @@ class MYPROJECT_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+private:
+	AMyPawn* selectedPawn = nullptr;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -21,6 +24,8 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void setPawn();
 
 
 };
