@@ -15,17 +15,17 @@ class MYPROJECT_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-private:
-	AMyPawn* selectedPawn = nullptr;
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void setPawn();
+	void SetPawn();
+	
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
+private:
+	AMyPawn* SelectedPawn = nullptr;
 
 };

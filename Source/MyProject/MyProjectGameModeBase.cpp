@@ -8,5 +8,4 @@
 AMyProjectGameModeBase::AMyProjectGameModeBase()
 {
 	PlayerControllerClass = AMyPlayerController::StaticClass();
-	DefaultPawnClass = AMyPawn::StaticClass();
 }

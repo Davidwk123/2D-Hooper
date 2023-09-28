@@ -4,6 +4,7 @@
 #include "MyPlayerController.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 #include "MyPawn.h"
+#include "PaperSpriteComponent.h"
 
 
 void AMyPlayerController::BeginPlay() 
@@ -11,71 +12,81 @@ void AMyPlayerController::BeginPlay()
     Super::BeginPlay();
 
     this->bShowMouseCursor = true;
-
+    //GetPawn()->GetComponentByClass<UPaperSpriteComponent>()->SetWorldRotation(FRotator(0.f, 0.f, 0.f));
 }
 
-void AMyPlayerController::setPawn()
+void AMyPlayerController::Tick(float DeltaTime)
 {
-    APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+
+    // FVector2D MousePosition;
+    // APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+    // MyPlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
+
+     /*UE_LOG(LogTemp, Warning, TEXT("%f"),DeltaTime);*/
+
+    // if (MyPlayerController->PlayerInput->IsPressed(EKeys::LeftMouseButton))
+    // {
+    //    
+    //     FHitResult HitResult;
+    //     GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
+
+    //     AMyPawn* ClickedPawn = Cast<AMyPawn>(HitResult.GetActor());
+
+    //     if(ClickedPawn)
+    //     {
+
+    //         // Trigger the event on the clicked pawn
+    //         ClickedPawn->PawnMovement(MousePosition);
+    //         /*UE_LOG(LogTemp, Warning, TEXT("Clicked"));*/
+    //        
+    //     }
+    // }
+}
+
+void AMyPlayerController::SetPawn()
+{
+    /*APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 
     FHitResult HitResult;
     GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
 
     FVector2D MousePosition;
     MyPlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
+
     FVector WorldLocation;
     FVector WorldDirection;
     UGameplayStatics::DeprojectScreenToWorld(MyPlayerController, MousePosition, WorldLocation, WorldDirection);
-
-    if (selectedPawn == nullptr) {
-        if (MyPlayerController->PlayerInput->IsPressed(EKeys::LeftMouseButton))
+    
+    int WorldLocationShootingBoundary = 341;
+    if (SelectedPawn == nullptr) {
+        if (MyPlayerController->PlayerInput->IsPressed(EKeys::LeftMouseButton) && WorldLocation.X < WorldLocationShootingBoundary)
         {
-            selectedPawn = Cast<AMyPawn>(HitResult.GetActor());
+            SelectedPawn = Cast<AMyPawn>(HitResult.GetActor());
         }
     }
     else
     {
         if (!(MyPlayerController->PlayerInput->IsPressed(EKeys::LeftMouseButton)))
         {
-            selectedPawn->ResetLinearDamping();
-            selectedPawn = nullptr;
+            SelectedPawn->ResetLinearDamping();
+            SelectedPawn = nullptr;
         }
         else
         {
-            if (selectedPawn)
+            if (WorldLocation.X < WorldLocationShootingBoundary)
             {
-                selectedPawn->PawnMovement(FVector2d(WorldLocation.X, WorldLocation.Z));
+                if (SelectedPawn)
+                {
+                    
+                    SelectedPawn->MovePawn(FVector2d(WorldLocation.X, WorldLocation.Z));
+                }
+            }
+            else {
+                UGameplayStatics::ProjectWorldToScreen(MyPlayerController, FVector(341.f, 0.f, WorldLocation.Z), MousePosition);
+                SetMouseLocation(MousePosition.X, MousePosition.Y);
             }
             
         }
-    }
+    }*/
 }
 
-void AMyPlayerController::Tick(float DeltaTime)
-{
-    setPawn();
-
-   // FVector2D MousePosition;
-   // APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
-   // MyPlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
-
-    /*UE_LOG(LogTemp, Warning, TEXT("%f"),DeltaTime);*/
-
-   // if (MyPlayerController->PlayerInput->IsPressed(EKeys::LeftMouseButton))
-   // {
-   //    
-   //     FHitResult HitResult;
-   //     GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
-
-   //     AMyPawn* ClickedPawn = Cast<AMyPawn>(HitResult.GetActor());
-
-   //     if(ClickedPawn)
-   //     {
-
-   //         // Trigger the event on the clicked pawn
-   //         ClickedPawn->PawnMovement(MousePosition);
-   //         /*UE_LOG(LogTemp, Warning, TEXT("Clicked"));*/
-   //        
-   //     }
-   // }
-}

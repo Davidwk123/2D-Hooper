@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "PaperSpriteComponent.h"
+#include "InputActionValue.h"
 #include "MyPawn.generated.h"
+
 
 
 
@@ -19,27 +21,42 @@ public:
 	// Sets default values for this pawn's properties
 	AMyPawn();
 
-//private:
-private:
-	UPROPERTY(EditAnywhere)
-	USceneComponent* DefaultRoot = nullptr;
-
-	UPROPERTY(EditAnywhere)
-	UPaperSpriteComponent* SpriteComponent = nullptr;
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	/*virtual void GetMovementComponent(FVector2d mousepo) override;*/
-	void PawnMovement(FVector2d mousePosition);
+	//virtual void GetMovementComponent(FVector2d mousepo) override;
+	
+	void MovePawn(const FInputActionValue& Value);
+
+	void DropPawn(const FInputActionValue& Value);
+
+	void ResetPawn(const FInputActionValue& Value);
+
+	FVector GetSpringForce(FVector2d MousePosition, int SpringConstant, int DragConstant);
 
 	void ResetLinearDamping();
+
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY(EditAnywhere)
+	USceneComponent* DefaultRoot;
+
+	UPROPERTY(EditAnywhere)
+	UPaperSpriteComponent* SpriteComponent;
+
+	UPROPERTY(EditAnywhere)
+	class UInputMappingContext* InputMapping;
+
+	UPROPERTY(EditAnywhere)
+	class UMyInputConfigData* InputActions;
+
+	bool bIsPawnSelected;
+
 };
