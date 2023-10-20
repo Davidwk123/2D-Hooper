@@ -75,6 +75,9 @@ private:
 
 	bool bIsPawnSelected;
 
+	int PawnLives;
+	int PawnScore;
+
 	const int RIGHT_BOUNDARY = 1065;
 	const int LEFT_BOUNDARY = 23;
 	const int TOP_BOUNDARY = 551;

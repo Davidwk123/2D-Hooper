@@ -9,8 +9,6 @@
 #include "Blueprint/UserWidget.h"
 #include "MyPawnUserWidget.h"
 
-
-
 // Sets default values
 AMyBasketballPawn::AMyBasketballPawn()
 {
@@ -30,6 +28,9 @@ AMyBasketballPawn::AMyBasketballPawn()
 	PawnWidget = nullptr;
 
 	bIsPawnSelected = false;
+
+	PawnLives = 3;
+	PawnScore = 0;
 }
 
 
@@ -48,6 +49,7 @@ void AMyBasketballPawn::BeginPlay()
 	SpriteComponent->SetMassScale(NAME_None, SpriteMass);
 
 	PawnWidget = CreateWidget<UMyPawnUserWidget>(GetWorld(), PawnWidgetClass);
+	PawnWidget->SetLives(PawnLives);
 	PawnWidget->AddToViewport();
 	PawnWidget->SetVisibility(ESlateVisibility::Collapsed);
 	
