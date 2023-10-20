@@ -14,5 +14,9 @@ void UMyPawnUserWidget::SetLives(int PawnLives)
 		Lives->SetText(FText::Format(LOCTEXT("CombinedTextKey", "Lives: {0}"), PawnLives));
 	}
 }
+void UMyPawnUserWidget::SetScore(int PawnScore)
+{
+
+}
 #undef LOCTEXT_NAMESPACE
 #endif

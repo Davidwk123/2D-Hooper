@@ -15,18 +15,18 @@ class MYPROJECT_API UMyPawnUserWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* Lives;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* Score;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* PawnHelp;
 
 	void SetLives(int PawnLives);
 
+	void SetScore(int PawnScore);
+
 private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* Lives;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* Score;
 
 };
