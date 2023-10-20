@@ -16,5 +16,4 @@ class MYPROJECT_API AMyProjectGameModeBase : public AGameModeBase
 
 public:
 	AMyProjectGameModeBase();
-
 };
