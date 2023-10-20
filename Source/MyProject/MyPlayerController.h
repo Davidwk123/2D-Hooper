@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "MyPawn.h"
 #include "MyPlayerController.generated.h"
 
 /**
@@ -19,13 +18,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetPawn();
-	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
-	AMyPawn* SelectedPawn = nullptr;
 
 };
