@@ -1,16 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-//#include "PaperSpriteComponent.h"
 #include "MyPawn.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "MyInputConfigData.h"
+#include "PaperTileMapActor.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
+#include "MyPawnUserWidget.h"
 
 
 
 // Sets default values
-AMyPawn::AMyPawn()
+AMyBasketballPawn::AMyBasketballPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -24,42 +26,71 @@ AMyPawn::AMyPawn()
 	InputMapping = nullptr;
 	InputActions = nullptr;
 
+	PawnWidgetClass = nullptr;
+	PawnWidget = nullptr;
+
 	bIsPawnSelected = false;
 }
 
 
 // Called when the game starts or when spawned
-void AMyPawn::BeginPlay()
+void AMyBasketballPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	FVector PawnLocation = FVector(167.f, 30.f, 109.f);
-	//SetActorRotation(FRotator(0.f, 0.f, 0.f));
-	//SetActorLocation(PawnLocation);
 	SpriteComponent->SetWorldLocation(PawnLocation);
-	//UE_LOG(LogTemp, Warning, TEXT("SpriteComponent Rotation after: %s"), *SpriteComponent->GetComponentRotation().ToString());
-	//SpriteComponent->SetWorldRotation(FRotator(0.f, 0.f, 0.f));
 	
-
 	FVector NewScale = FVector(.012f, 1.f, .012f);
 	SetActorScale3D(NewScale);
+
 	SpriteComponent->SetSimulatePhysics(true);
 	float SpriteMass = 0.5f;
 	SpriteComponent->SetMassScale(NAME_None, SpriteMass);
+
+	PawnWidget = CreateWidget<UMyPawnUserWidget>(GetWorld(), PawnWidgetClass);
+	PawnWidget->AddToViewport();
+	PawnWidget->SetVisibility(ESlateVisibility::Collapsed);
 	
 }
 
-// Called every frame
-void AMyPawn::Tick(float DeltaTime)
+void AMyBasketballPawn::SetPawnPosition(float PawnPositionX, float PawnPositionY)
 {
-	Super::Tick(DeltaTime);
-	/*FVector2d PawnPosition2d(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
-	UE_LOG(LogTemp, Warning, TEXT("%f, %f"), PawnPosition2d.X, PawnPosition2d.Y);*/
-	//UE_LOG(LogTemp, Warning, TEXT("%f %f"),SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
+	FVector PawnLocation = FVector(PawnPositionX, STARTING_Z_POSITION, PawnPositionY);
+	SpriteComponent->SetWorldLocation(PawnLocation);
+	SpriteComponent->SetPhysicsLinearVelocity(FVector::ZeroVector);
+	SpriteComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+}
 
+// Called every frame
+void AMyBasketballPawn::Tick(float DeltaTime)
+	{
+		Super::Tick(DeltaTime);
+
+		FVector2d PawnPosition2d(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
+		/*if (PawnPosition2d.X >= RightBoundary || PawnPosition2d.X <= LeftBoundary || PawnPosition2d.Y <= BottomBoundary)
+		{
+			FVector PawnLocation = FVector(167.f, 30.f, 109.f);
+			SpriteComponent->SetWorldLocation(PawnLocation);
+			SpriteComponent->SetPhysicsLinearVelocity(FVector::ZeroVector);
+			SpriteComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+		}*/
+		/*TArray<AActor*> OverlappingActors;
+
+		GetOverlappingActors(OverlappingActors);
+
+		for (AActor* Actor : OverlappingActors)
+		{
+			APaperTileMapActor* ShootingTile = Cast<APaperTileMapActor>(Actor);
+			if (ShootingTile)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("triggered"));
+			}
+
+		}*/
 }
 
 // Called to bind functionality to input
-void AMyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AMyBasketballPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
@@ -72,127 +103,137 @@ void AMyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	UEnhancedInputComponent* PEI = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
-	PEI->BindAction(InputActions->InputReset, ETriggerEvent::Triggered, this, &AMyPawn::MovePawn);
-	PEI->BindAction(InputActions->InputReset, ETriggerEvent::Completed, this, &AMyPawn::DropPawn);
-	PEI->BindAction(InputActions->InputReset, ETriggerEvent::Triggered, this, &AMyPawn::ResetPawn);
+	PEI->BindAction(InputActions->InputMove, ETriggerEvent::Triggered, this, &AMyBasketballPawn::MovePawn);
+	PEI->BindAction(InputActions->InputMove, ETriggerEvent::Completed, this, &AMyBasketballPawn::DropPawn);
+	PEI->BindAction(InputActions->InputReset, ETriggerEvent::Triggered, this, &AMyBasketballPawn::ResetPawn);
 }
 
-void AMyPawn::MovePawn(const FInputActionValue& Value)
+void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 {
+	// Stores the Actor that the mouse is hovering over
 	FHitResult HitResult;
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	
 	bool bHit = MyPlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
 
-	if (!bIsPawnSelected)
+	// Get mouse screen position
+	FVector2D MousePosition;
+	MyPlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
+	FVector MouseWorldLocation;
+	FVector WorldDirection;
+	// Get mouse world position
+	UGameplayStatics::DeprojectScreenToWorld(MyPlayerController, MousePosition, MouseWorldLocation, WorldDirection);
+
+	if (bIsPawnSelected == false && MouseWorldLocation.X < SHOOTING_BOUNDARY)
 	{
-		if (Cast<AMyPawn>(HitResult.GetActor()))
+		if (Cast<AMyBasketballPawn>(HitResult.GetActor()))
 		{
 			bIsPawnSelected = true;
 		}
 	}
-	else
+	else if(bIsPawnSelected && MouseWorldLocation.X > LEFT_BOUNDARY && MouseWorldLocation.X < SHOOTING_BOUNDARY)
 	{
-		FVector2D MousePosition;
-		MyPlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
-		FVector MouseWorldLocation;
-		FVector WorldDirection;
-		UGameplayStatics::DeprojectScreenToWorld(MyPlayerController, MousePosition, MouseWorldLocation, WorldDirection);
-		SpriteComponent->AddForce(GetSpringForce(FVector2d(MouseWorldLocation.X, MouseWorldLocation.Z), 500.f, 16.67));
+		if (MouseWorldLocation.Z <= GROUND_HEIGHT)
+		{
+			SetPawnPosition(MouseWorldLocation.X, GROUND_HEIGHT);
+		}
+		else if (MouseWorldLocation.Z >= TOP_BOUNDARY)
+		{
+			SetPawnPosition(MouseWorldLocation.X, TOP_BOUNDARY);
+		}
+		else
+		{
+			SpriteComponent->AddForce(GetSpringForce(FVector2d(MouseWorldLocation.X, MouseWorldLocation.Z)));
+			// Called incase the Pawn's velocity gets to high 
+			ResetPawnVelocity();
+		}
 	}
-	
-	//FVector PawnForce = FVector::ZeroVector;
-	//if (MousePosition != FVector2d::ZeroVector)
-	//{
-	//	PawnForce = GetSpringForce(MousePosition, 500.f, 16.67);
-	//}
-	//else
-	//{
-	//	/*float GrabConstant = -500.f;
-	//	PawnForce = FVector(GrabConstant, 0.f, 0.f);*/
-	//	FVector2d PawnPosition2d(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
-	//	FVector2d BallResetPosition2d(167.f, 109.f);
-	//	FVector2d BallResetDifference = BallResetPosition2d - PawnPosition2d;
-	//	//int SpringConstant = 500;
-	//	BallResetDifference *= 500;
-	//	FVector SpringForce(BallResetDifference.X, 0.f, BallResetDifference.Y);
-	//	PawnForce = SpringForce;
-	//	//float DragConstant = 16.67;
-	//	SpriteComponent->SetLinearDamping(16.67);
-
-	//}
-
-	//SpriteComponent->AddForce(PawnForce);
-	//UE_LOG(LogTemp, Warning, TEXT("%f, %f"), position2d.X, position2d.Y);
+	else if(bIsPawnSelected && MouseWorldLocation.X >= SHOOTING_BOUNDARY)
+	{
+		if (MouseWorldLocation.Z > GROUND_HEIGHT && MouseWorldLocation.Z < TOP_BOUNDARY)
+		{
+			SetPawnPosition(SHOOTING_BOUNDARY, MouseWorldLocation.Z);
+		}
+	}
+	else if(bIsPawnSelected && MouseWorldLocation.X <= LEFT_BOUNDARY)
+	{
+		if (MouseWorldLocation.Z > GROUND_HEIGHT && MouseWorldLocation.Z < TOP_BOUNDARY)
+		{
+			SetPawnPosition(LEFT_BOUNDARY, MouseWorldLocation.Z);
+		}
+	}
 }
 
-void AMyPawn::DropPawn(const FInputActionValue& Value)
+void AMyBasketballPawn::DropPawn(const FInputActionValue& Value)
 {
 	bIsPawnSelected = false;
-	ResetLinearDamping();
+	float DefaultDrag = 0.1f;
+	ResetPawnVelocity(DefaultDrag);
 }
 
-void AMyPawn::ResetPawn(const FInputActionValue& Value)
+void AMyBasketballPawn::ResetPawn(const FInputActionValue& Value)
 {
-	FVector2d PawnPosition2d(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
-	int WorldLocationShootingBoundary = 340;
-	int GroundHeightOfBall = 48;
+	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
 	
-	
-	//UE_LOG(LogTemp, Warning, TEXT("%f, %f"), PawnPosition2d.X, PawnPosition2d.Y);
-	if (PawnPosition2d.X > WorldLocationShootingBoundary && PawnPosition2d.Y <= GroundHeightOfBall)
+	if ((PawnLocation2D.X > SHOOTING_BOUNDARY && PawnLocation2D.Y <= GROUND_HEIGHT))
 	{
-		APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
-		FVector2D MousePosition;
-		MyPlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
-		FVector MouseWorldLocation;
-		FVector WorldDirection;
-		UGameplayStatics::DeprojectScreenToWorld(MyPlayerController, MousePosition, MouseWorldLocation, WorldDirection);
-
-		if (MouseWorldLocation.X < WorldLocationShootingBoundary)
-		{
-			FVector PawnLocation = FVector(167.f, 30.f, 109.f);
-			SpriteComponent->SetWorldLocation(PawnLocation);
-			SpriteComponent->SetPhysicsLinearVelocity(FVector::ZeroVector);
-			SpriteComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
-			//MovePawn(FVector2d(MouseWorldLocation.X, MouseWorldLocation.Z));
-		}
-		
+		SetPawnPosition(STARTING_X_POSITION, STARTING_Y_POSITION);
 	}
-
 }
 
-FVector AMyPawn::GetSpringForce(FVector2d MousePosition, int SpringConstant, int DragConstant)
+FVector AMyBasketballPawn::GetSpringForce(FVector2d MousePosition)
 {
-	FVector2d PawnPosition2d(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
-	FVector2d MousePawnDifference2d = MousePosition - PawnPosition2d;
+	FVector2d PawnPosition2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
+	// Get the differnce vector between Mouse and pawn position
+	FVector2d MousePawnDifference2D = MousePosition - PawnPosition2D;
 
-	//int SpringConstant = 500;
-	MousePawnDifference2d *= SpringConstant;
-	FVector SpringForce(MousePawnDifference2d.X, 0.f, MousePawnDifference2d.Y);
-
-	//float DragConstant = 16.67;
-	SpriteComponent->SetLinearDamping(DragConstant);
+	// Apply spring force to vector to create the mouse click/dragging mechanic 
+	MousePawnDifference2D *= SPRING_CONSTANT;
+	FVector SpringForce(MousePawnDifference2D.X, 0.f, MousePawnDifference2D.Y);
+	
+	// Apply new drag to match the spring constant so that the pawn does not clip out of the bounds due to the speed of the difference vector
+	SpriteComponent->SetLinearDamping(DRAG_CONSTANT);
 
 	return SpringForce;
 }
 
-void AMyPawn::ResetLinearDamping()
+UMyPawnUserWidget* AMyBasketballPawn::GetPawnWidget()
 {
-	SpriteComponent->SetLinearDamping(.01f);
-	double XVelocity = SpriteComponent->GetComponentVelocity().X;
-	double ZVelocity = SpriteComponent->GetComponentVelocity().Z;
+	return PawnWidget;
+}
 
-	if (XVelocity > 700.f && ZVelocity > 700.f)
+void AMyBasketballPawn::ResetPawnVelocity(float Drag)
+{
+	// Function can be called either when Pawn is unclicked by user or to check if velocity > max velcoity 
+	if (Drag != 0.f)
 	{
-		SpriteComponent->SetPhysicsLinearVelocity(FVector(700.f, 0.f, 700.f));
+		SpriteComponent->SetLinearDamping(.01f);
 	}
-	else if (XVelocity > 700.f)
+
+	float XVelocity = SpriteComponent->GetComponentVelocity().X;
+	float XVelocityDir = XVelocity / abs(XVelocity);
+	float YVelocity = SpriteComponent->GetComponentVelocity().Z;
+	float YVelocityDir = YVelocity / abs(YVelocity);
+	
+	/*
+	*  Checks if Pawn's X/Y velocity in any direction(absolute value is used to check this) is greater then max velocity,
+	*  if so it resets either/both of them 
+	*/
+	if (abs(XVelocity) > MAX_VELOCITY && abs(YVelocity) > MAX_VELOCITY)
 	{
-		SpriteComponent->SetPhysicsLinearVelocity(FVector(700.f, 0.f, ZVelocity));
+		SpriteComponent->SetPhysicsLinearVelocity(FVector(MAX_VELOCITY * XVelocityDir, 0.f, MAX_VELOCITY * YVelocityDir));
 	}
-	else if (ZVelocity > 700.f)
+	else if (abs(XVelocity) > MAX_VELOCITY)
 	{
-		SpriteComponent->SetPhysicsLinearVelocity(FVector(XVelocity, 0.f, 700.f));
+		SpriteComponent->SetPhysicsLinearVelocity(FVector(MAX_VELOCITY * XVelocityDir, 0.f, YVelocity));
 	}
+	else if (abs(YVelocity) > MAX_VELOCITY)
+	{
+		SpriteComponent->SetPhysicsLinearVelocity(FVector(XVelocity, 0.f, MAX_VELOCITY * YVelocityDir));
+	}
+}
+
+bool AMyBasketballPawn::IsPawnSelected()
+{
+	return bIsPawnSelected;
 }
