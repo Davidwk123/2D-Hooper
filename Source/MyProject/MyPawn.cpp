@@ -48,8 +48,10 @@ void AMyBasketballPawn::BeginPlay()
 	float SpriteMass = 0.5f;
 	SpriteComponent->SetMassScale(NAME_None, SpriteMass);
 
+	// Initialize Pawn Widgets 
 	PawnWidget = CreateWidget<UMyPawnUserWidget>(GetWorld(), PawnWidgetClass);
 	PawnWidget->SetLives(PawnLives);
+	PawnWidget->SetScore(PawnScore);
 	PawnWidget->AddToViewport();
 	PawnWidget->SetVisibility(ESlateVisibility::Collapsed);
 	
@@ -59,6 +61,7 @@ void AMyBasketballPawn::SetPawnPosition(float PawnPositionX, float PawnPositionY
 {
 	FVector PawnLocation = FVector(PawnPositionX, STARTING_Z_POSITION, PawnPositionY);
 	SpriteComponent->SetWorldLocation(PawnLocation);
+	// Sets the Pawn's Velocity/Rotation to 0 
 	SpriteComponent->SetPhysicsLinearVelocity(FVector::ZeroVector);
 	SpriteComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 }

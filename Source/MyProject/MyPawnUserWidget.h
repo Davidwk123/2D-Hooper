@@ -16,6 +16,13 @@ class MYPROJECT_API UMyPawnUserWidget : public UUserWidget
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* Lives;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* Score;
+
+	// Widget that will provide info to the user when a certain event occurs
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* PawnHelp;
 
 	void SetLives(int PawnLives);
@@ -23,10 +30,5 @@ public:
 	void SetScore(int PawnScore);
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* Lives;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* Score;
-
+	
 };
