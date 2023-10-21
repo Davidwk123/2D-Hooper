@@ -46,6 +46,10 @@ public:
 	// Bool if Pawn is click by user
 	bool IsPawnSelected();
 
+	// Adds to Score
+	void PawnScored();
+
+
 protected:
 	// Used to add new Widget from Blueprint
 	UPROPERTY(EditAnywhere)

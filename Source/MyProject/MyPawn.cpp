@@ -79,19 +79,6 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 			SpriteComponent->SetPhysicsLinearVelocity(FVector::ZeroVector);
 			SpriteComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 		}*/
-		/*TArray<AActor*> OverlappingActors;
-
-		GetOverlappingActors(OverlappingActors);
-
-		for (AActor* Actor : OverlappingActors)
-		{
-			APaperTileMapActor* ShootingTile = Cast<APaperTileMapActor>(Actor);
-			if (ShootingTile)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("triggered"));
-			}
-
-		}*/
 }
 
 // Called to bind functionality to input
@@ -241,4 +228,10 @@ void AMyBasketballPawn::ResetPawnVelocity(float Drag)
 bool AMyBasketballPawn::IsPawnSelected()
 {
 	return bIsPawnSelected;
+}
+
+void AMyBasketballPawn::PawnScored()
+{
+	PawnScore++;
+	PawnWidget->SetScore(PawnScore);
 }
