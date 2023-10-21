@@ -34,7 +34,6 @@ void AMyTileTrigger::BeginPlay()
 void AMyTileTrigger::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AMyTileTrigger::OverlapBegin(AActor* OverlappedActor, AActor* OtherActor)

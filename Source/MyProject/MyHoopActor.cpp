@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MyHoopActor.h"
+#include "MyPawn.h"
 
 // Sets default values
 AMyHoopActor::AMyHoopActor()
@@ -21,6 +22,13 @@ AMyHoopActor::AMyHoopActor()
 
 void AMyHoopActor::OverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
+	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(OtherActor);
+
+	// When a Pawn overlaps with this Actor, PawnScore goes up by 1
+	if (Ball)
+	{
+		Ball->PawnScored();
+	}
 }
 
 void AMyHoopActor::OverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
