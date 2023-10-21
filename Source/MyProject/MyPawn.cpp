@@ -45,6 +45,7 @@ void AMyBasketballPawn::BeginPlay()
 	SetActorScale3D(NewScale);
 
 	SpriteComponent->SetSimulatePhysics(true);
+	SpriteComponent->SetUseCCD(false);
 	float SpriteMass = 0.5f;
 	SpriteComponent->SetMassScale(NAME_None, SpriteMass);
 
@@ -85,6 +86,8 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 		FVector2d PawnPosition2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
 		
 		CheckPawnOutOfBounds(PawnPosition2D.X, PawnPosition2D.Y);
+		// Called incase the Pawn's velocity gets to high 
+		ResetPawnVelocity();
 }
 
 // Called to bind functionality to input
@@ -127,6 +130,8 @@ void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 		if (Cast<AMyBasketballPawn>(HitResult.GetActor()))
 		{
 			bIsPawnSelected = true;
+			// Turn of CCD collisions to improve performance
+			SpriteComponent->SetUseCCD(false);
 		}
 	}
 	else if(bIsPawnSelected && MouseWorldLocation.X > LEFT_BOUNDARY && MouseWorldLocation.X < SHOOTING_BOUNDARY)
@@ -142,8 +147,6 @@ void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 		else
 		{
 			SpriteComponent->AddForce(GetSpringForce(FVector2d(MouseWorldLocation.X, MouseWorldLocation.Z)));
-			// Called incase the Pawn's velocity gets to high 
-			ResetPawnVelocity();
 		}
 	}
 	else if(bIsPawnSelected && MouseWorldLocation.X >= SHOOTING_BOUNDARY)
@@ -202,16 +205,14 @@ UMyPawnUserWidget* AMyBasketballPawn::GetPawnWidget()
 
 void AMyBasketballPawn::ResetPawnVelocity(float Drag)
 {
-	// Function can be called either when Pawn is unclicked by user or to check if velocity > max velcoity 
+	// This check is to see if Pawn is unclicked by user, if so reset the drag to the default value 
 	if (Drag != 0.f)
 	{
 		SpriteComponent->SetLinearDamping(.01f);
 	}
 
 	float XVelocity = SpriteComponent->GetComponentVelocity().X;
-	float XVelocityDir = XVelocity / abs(XVelocity);
 	float YVelocity = SpriteComponent->GetComponentVelocity().Z;
-	float YVelocityDir = YVelocity / abs(YVelocity);
 	
 	/*
 	*  Checks if Pawn's X/Y velocity in any direction(absolute value is used to check this) is greater then max velocity,
@@ -219,14 +220,20 @@ void AMyBasketballPawn::ResetPawnVelocity(float Drag)
 	*/
 	if (abs(XVelocity) > MAX_VELOCITY && abs(YVelocity) > MAX_VELOCITY)
 	{
+		float XVelocityDir = XVelocity / abs(XVelocity);
+		float YVelocityDir = YVelocity / abs(YVelocity);
 		SpriteComponent->SetPhysicsLinearVelocity(FVector(MAX_VELOCITY * XVelocityDir, 0.f, MAX_VELOCITY * YVelocityDir));
 	}
 	else if (abs(XVelocity) > MAX_VELOCITY)
 	{
+		float XVelocityDir = XVelocity / abs(XVelocity);
+		float YVelocityDir = YVelocity / abs(YVelocity);
 		SpriteComponent->SetPhysicsLinearVelocity(FVector(MAX_VELOCITY * XVelocityDir, 0.f, YVelocity));
 	}
 	else if (abs(YVelocity) > MAX_VELOCITY)
 	{
+		float XVelocityDir = XVelocity / abs(XVelocity);
+		float YVelocityDir = YVelocity / abs(YVelocity);
 		SpriteComponent->SetPhysicsLinearVelocity(FVector(XVelocity, 0.f, MAX_VELOCITY * YVelocityDir));
 	}
 }
