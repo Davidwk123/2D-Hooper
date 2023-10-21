@@ -66,19 +66,25 @@ void AMyBasketballPawn::SetPawnPosition(float PawnPositionX, float PawnPositionY
 	SpriteComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 }
 
+void AMyBasketballPawn::CheckPawnOutOfBounds(float PawnPositionX, float PawnPositionY)
+{
+	float PawnPositionXEdge = PawnPositionX + PAWN_RADIUS;
+	float PawnPositionYEdge = PawnPositionY + PAWN_RADIUS;
+
+	if (PawnPositionXEdge <= LEFT_BOUNDARY || PawnPositionXEdge >= RIGHT_BOUNDARY || PawnPositionYEdge <= GROUND_HEIGHT)
+	{
+		SetPawnPosition(STARTING_X_POSITION, STARTING_Y_POSITION);
+	}
+}
+
 // Called every frame
 void AMyBasketballPawn::Tick(float DeltaTime)
 	{
 		Super::Tick(DeltaTime);
 
-		FVector2d PawnPosition2d(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
-		/*if (PawnPosition2d.X >= RightBoundary || PawnPosition2d.X <= LeftBoundary || PawnPosition2d.Y <= BottomBoundary)
-		{
-			FVector PawnLocation = FVector(167.f, 30.f, 109.f);
-			SpriteComponent->SetWorldLocation(PawnLocation);
-			SpriteComponent->SetPhysicsLinearVelocity(FVector::ZeroVector);
-			SpriteComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
-		}*/
+		FVector2d PawnPosition2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
+		
+		CheckPawnOutOfBounds(PawnPosition2D.X, PawnPosition2D.Y);
 }
 
 // Called to bind functionality to input

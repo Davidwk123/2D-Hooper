@@ -76,12 +76,15 @@ private:
 	class UMyPawnUserWidget* PawnWidget;
 
 	void SetPawnPosition(float PawnPositionX, float PawnPositionY);
+	
+	void CheckPawnOutOfBounds(float PawnPositionX, float PawnPositionY);
 
 	bool bIsPawnSelected;
 
 	int PawnLives;
 	int PawnScore;
 
+	const int PAWN_RADIUS = 24;
 	const int RIGHT_BOUNDARY = 1065;
 	const int LEFT_BOUNDARY = 23;
 	const int TOP_BOUNDARY = 551;
