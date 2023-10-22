@@ -44,11 +44,14 @@ void AMyBasketballPawn::BeginPlay()
 	
 	FVector NewScale = FVector(.012f, 1.f, .012f);
 	SetActorScale3D(NewScale);
-
 	SpriteComponent->SetSimulatePhysics(true);
 	SpriteComponent->SetUseCCD(false);
+	
 	float SpriteMass = 0.5f;
 	SpriteComponent->SetMassScale(NAME_None, SpriteMass);
+
+	// Set Pawn to be unmoveable, so user can not interact with pawn in main menu screen
+	SpriteComponent->SetMobility(EComponentMobility::Stationary);
 
 	// Initialize Pawn Widgets 
 	PawnWidget = CreateWidget<UMyPawnUserWidget>(GetWorld(), PawnWidgetClass);
@@ -114,58 +117,62 @@ void AMyBasketballPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 {
-	// Stores the Actor that the mouse is hovering over
-	FHitResult HitResult;
-	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
-	
-	bool bHit = MyPlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
+	// Check added to see if user is out of main menu screen
+	if (SpriteComponent->Mobility == EComponentMobility::Movable)
+	{
+		// Stores the Actor that the mouse is hovering over
+		FHitResult HitResult;
+		APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 
-	// Get mouse screen position
-	FVector2D MousePosition;
-	MyPlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
-	FVector MouseWorldLocation;
-	FVector WorldDirection;
-	// Get mouse world position
-	UGameplayStatics::DeprojectScreenToWorld(MyPlayerController, MousePosition, MouseWorldLocation, WorldDirection);
+		bool bHit = MyPlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
 
-	if (bIsPawnSelected == false && MouseWorldLocation.X < SHOOTING_BOUNDARY)
-	{
-		if (Cast<AMyBasketballPawn>(HitResult.GetActor()))
+		// Get mouse screen position
+		FVector2D MousePosition;
+		MyPlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
+		FVector MouseWorldLocation;
+		FVector WorldDirection;
+		// Get mouse world position
+		UGameplayStatics::DeprojectScreenToWorld(MyPlayerController, MousePosition, MouseWorldLocation, WorldDirection);
+
+		if (bIsPawnSelected == false && MouseWorldLocation.X < SHOOTING_BOUNDARY)
 		{
-			bIsPawnSelected = true;
-			// Turn of CCD collisions to improve performance
-			SpriteComponent->SetUseCCD(false);
-			// When user picks up Pawn, Pawn is not grounded anymore
-			bIsPawnGrounded = false;
+			if (Cast<AMyBasketballPawn>(HitResult.GetActor()))
+			{
+				bIsPawnSelected = true;
+				// Turn of CCD collisions to improve performance
+				SpriteComponent->SetUseCCD(false);
+				// When user picks up Pawn, Pawn is not grounded anymore
+				bIsPawnGrounded = false;
+			}
 		}
-	}
-	else if(bIsPawnSelected && MouseWorldLocation.X > LEFT_BOUNDARY && MouseWorldLocation.X < SHOOTING_BOUNDARY)
-	{
-		if (MouseWorldLocation.Z <= GROUND_HEIGHT)
+		else if (bIsPawnSelected && MouseWorldLocation.X > LEFT_BOUNDARY && MouseWorldLocation.X < SHOOTING_BOUNDARY)
 		{
-			SetPawnPosition(MouseWorldLocation.X, GROUND_HEIGHT);
+			if (MouseWorldLocation.Z <= GROUND_HEIGHT)
+			{
+				SetPawnPosition(MouseWorldLocation.X, GROUND_HEIGHT);
+			}
+			else if (MouseWorldLocation.Z >= TOP_BOUNDARY)
+			{
+				SetPawnPosition(MouseWorldLocation.X, TOP_BOUNDARY);
+			}
+			else
+			{
+				SpriteComponent->AddForce(GetSpringForce(FVector2d(MouseWorldLocation.X, MouseWorldLocation.Z)));
+			}
 		}
-		else if (MouseWorldLocation.Z >= TOP_BOUNDARY)
+		else if (bIsPawnSelected && MouseWorldLocation.X >= SHOOTING_BOUNDARY)
 		{
-			SetPawnPosition(MouseWorldLocation.X, TOP_BOUNDARY);
+			if (MouseWorldLocation.Z > GROUND_HEIGHT && MouseWorldLocation.Z < TOP_BOUNDARY)
+			{
+				SetPawnPosition(SHOOTING_BOUNDARY, MouseWorldLocation.Z);
+			}
 		}
-		else
+		else if (bIsPawnSelected && MouseWorldLocation.X <= LEFT_BOUNDARY)
 		{
-			SpriteComponent->AddForce(GetSpringForce(FVector2d(MouseWorldLocation.X, MouseWorldLocation.Z)));
-		}
-	}
-	else if(bIsPawnSelected && MouseWorldLocation.X >= SHOOTING_BOUNDARY)
-	{
-		if (MouseWorldLocation.Z > GROUND_HEIGHT && MouseWorldLocation.Z < TOP_BOUNDARY)
-		{
-			SetPawnPosition(SHOOTING_BOUNDARY, MouseWorldLocation.Z);
-		}
-	}
-	else if(bIsPawnSelected && MouseWorldLocation.X <= LEFT_BOUNDARY)
-	{
-		if (MouseWorldLocation.Z > GROUND_HEIGHT && MouseWorldLocation.Z < TOP_BOUNDARY)
-		{
-			SetPawnPosition(LEFT_BOUNDARY, MouseWorldLocation.Z);
+			if (MouseWorldLocation.Z > GROUND_HEIGHT && MouseWorldLocation.Z < TOP_BOUNDARY)
+			{
+				SetPawnPosition(LEFT_BOUNDARY, MouseWorldLocation.Z);
+			}
 		}
 	}
 }

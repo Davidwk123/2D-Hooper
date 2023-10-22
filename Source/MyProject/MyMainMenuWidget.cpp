@@ -20,6 +20,8 @@ void UMyMainMenuWidget::ClickPlay()
 	
 	SetVisibility(ESlateVisibility::Collapsed);
 	Ball->GetPawnWidget()->SetVisibility(ESlateVisibility::Visible);
+	// Make Pawn moveable again after user clicks Play
+	Ball->GetComponentByClass<UPaperSpriteComponent>()->SetMobility(EComponentMobility::Movable);
 }
 
 void UMyMainMenuWidget::ClickQuit()
