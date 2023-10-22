@@ -45,6 +45,7 @@ void AMyBasketballPawn::BeginPlay()
 	FVector NewScale = FVector(.012f, 1.f, .012f);
 	SetActorScale3D(NewScale);
 	SpriteComponent->SetSimulatePhysics(true);
+	// Turn of CCD collisions to improve performance
 	SpriteComponent->SetUseCCD(false);
 	
 	float SpriteMass = 0.5f;
@@ -123,15 +124,14 @@ void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 		// Stores the Actor that the mouse is hovering over
 		FHitResult HitResult;
 		APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
-
 		bool bHit = MyPlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
 
 		// Get mouse screen position
 		FVector2D MousePosition;
 		MyPlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);
+		// Get mouse world position
 		FVector MouseWorldLocation;
 		FVector WorldDirection;
-		// Get mouse world position
 		UGameplayStatics::DeprojectScreenToWorld(MyPlayerController, MousePosition, MouseWorldLocation, WorldDirection);
 
 		if (bIsPawnSelected == false && MouseWorldLocation.X < SHOOTING_BOUNDARY)
@@ -139,8 +139,6 @@ void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 			if (Cast<AMyBasketballPawn>(HitResult.GetActor()))
 			{
 				bIsPawnSelected = true;
-				// Turn of CCD collisions to improve performance
-				SpriteComponent->SetUseCCD(false);
 				// When user picks up Pawn, Pawn is not grounded anymore
 				bIsPawnGrounded = false;
 			}
@@ -188,7 +186,7 @@ void AMyBasketballPawn::ResetPawn(const FInputActionValue& Value)
 {
 	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
 	
-	if ((PawnLocation2D.X > SHOOTING_BOUNDARY && PawnLocation2D.Y <= GROUND_HEIGHT))
+	if ((PawnLocation2D.X > SHOOTING_BOUNDARY && bIsPawnGrounded))
 	{
 		SetPawnPosition(STARTING_X_POSITION, STARTING_Y_POSITION);
 	}
@@ -228,7 +226,7 @@ void AMyBasketballPawn::ResetPawnVelocity(float Drag)
 	
 	/*
 	*  Checks if Pawn's X/Y velocity in any direction(absolute value is used to check this) is greater then max velocity,
-	*  if so it resets either/both of them 
+	*  if so it sets either/both of them to max velocity 
 	*/
 	if (abs(XVelocity) > MAX_VELOCITY && abs(YVelocity) > MAX_VELOCITY)
 	{
