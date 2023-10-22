@@ -43,8 +43,11 @@ public:
 	// Called to reset velocity of Pawn to prevent it from clipping out of bounds
 	void ResetPawnVelocity(float Drag = 0.f);
 	
-	// Bool if Pawn is click by user
+	// If Pawn is clicked by user
 	bool IsPawnSelected();
+
+	// If Pawn is on the ground
+	bool IsPawnGrounded();
 
 	// Adds to Score
 	void PawnScored();
@@ -80,6 +83,8 @@ private:
 	void CheckPawnOutOfBounds(float PawnPositionX, float PawnPositionY);
 
 	bool bIsPawnSelected;
+
+	bool bIsPawnGrounded;
 
 	int PawnLives;
 	int PawnScore;

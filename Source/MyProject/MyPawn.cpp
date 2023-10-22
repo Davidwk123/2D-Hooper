@@ -28,6 +28,7 @@ AMyBasketballPawn::AMyBasketballPawn()
 	PawnWidget = nullptr;
 
 	bIsPawnSelected = false;
+	bIsPawnGrounded = false;
 
 	PawnLives = 3;
 	PawnScore = 0;
@@ -86,8 +87,10 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 		FVector2d PawnPosition2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
 		
 		CheckPawnOutOfBounds(PawnPosition2D.X, PawnPosition2D.Y);
-		// Called incase the Pawn's velocity gets to high 
+		// Called when Pawn's velocity reaches max velocity 
 		ResetPawnVelocity();
+
+		UE_LOG(LogTemp, Warning, TEXT("bIsMyBool is %s"), IsPawnGrounded() ? TEXT("true") : TEXT("false"));
 }
 
 // Called to bind functionality to input
@@ -132,6 +135,8 @@ void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 			bIsPawnSelected = true;
 			// Turn of CCD collisions to improve performance
 			SpriteComponent->SetUseCCD(false);
+			// When user picks up Pawn, Pawn is not grounded anymore
+			bIsPawnGrounded = false;
 		}
 	}
 	else if(bIsPawnSelected && MouseWorldLocation.X > LEFT_BOUNDARY && MouseWorldLocation.X < SHOOTING_BOUNDARY)
@@ -241,6 +246,18 @@ void AMyBasketballPawn::ResetPawnVelocity(float Drag)
 bool AMyBasketballPawn::IsPawnSelected()
 {
 	return bIsPawnSelected;
+}
+
+bool AMyBasketballPawn::IsPawnGrounded()
+{
+	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
+
+	if (PawnLocation2D.Y <= GROUND_HEIGHT && bIsPawnSelected == false)
+	{
+		bIsPawnGrounded = true;
+	}
+
+	return bIsPawnGrounded;
 }
 
 void AMyBasketballPawn::PawnScored()
