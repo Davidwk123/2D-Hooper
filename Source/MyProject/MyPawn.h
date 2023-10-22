@@ -52,6 +52,9 @@ public:
 	// Adds to Score
 	void PawnScored();
 
+	// Subtracts from Lives
+	void PawnMissed();
+
 
 protected:
 	// Used to add new Widget from Blueprint
@@ -83,8 +86,9 @@ private:
 	void CheckPawnOutOfBounds(float PawnPositionX, float PawnPositionY);
 
 	bool bIsPawnSelected;
-
 	bool bIsPawnGrounded;
+	bool bDidPawnScore;
+	bool bDidPawnMiss;
 
 	int PawnLives;
 	int PawnScore;

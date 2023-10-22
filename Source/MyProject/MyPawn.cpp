@@ -29,6 +29,8 @@ AMyBasketballPawn::AMyBasketballPawn()
 
 	bIsPawnSelected = false;
 	bIsPawnGrounded = false;
+	bDidPawnScore = false;
+	bDidPawnMiss = false;
 
 	PawnLives = 3;
 	PawnScore = 0;
@@ -91,10 +93,18 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 		FVector2d PawnPosition2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
 		
 		CheckPawnOutOfBounds(PawnPosition2D.X, PawnPosition2D.Y);
+
 		// Called when Pawn's velocity reaches max velocity 
 		ResetPawnVelocity();
 
-		UE_LOG(LogTemp, Warning, TEXT("bIsMyBool is %s"), IsPawnGrounded() ? TEXT("true") : TEXT("false"));
+		IsPawnGrounded();
+
+		// Check that prevents Pawn from continously losing lives
+		if (bDidPawnMiss == false)
+		{
+			PawnMissed();
+		}
+		//UE_LOG(LogTemp, Warning, TEXT("bIsMyBool is %s"), IsPawnGrounded() ? TEXT("true") : TEXT("false"));
 }
 
 // Called to bind functionality to input
@@ -186,9 +196,12 @@ void AMyBasketballPawn::ResetPawn(const FInputActionValue& Value)
 {
 	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
 	
-	if ((PawnLocation2D.X > SHOOTING_BOUNDARY && bIsPawnGrounded))
+	if (PawnLocation2D.X > SHOOTING_BOUNDARY && bIsPawnGrounded)
 	{
 		SetPawnPosition(STARTING_X_POSITION, STARTING_Y_POSITION);
+		// Resets that check for user misses/makes the shot 
+		bDidPawnMiss = false;
+		bDidPawnScore = false;
 	}
 }
 
@@ -267,6 +280,19 @@ bool AMyBasketballPawn::IsPawnGrounded()
 
 void AMyBasketballPawn::PawnScored()
 {
+	bDidPawnScore = true;
 	PawnScore++;
 	PawnWidget->SetScore(PawnScore);
+}
+
+void AMyBasketballPawn::PawnMissed()
+{
+	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
+
+	if (PawnLocation2D.X > SHOOTING_BOUNDARY && bIsPawnGrounded && bDidPawnScore == false)
+	{
+		bDidPawnMiss = true;
+		PawnLives--;
+		PawnWidget->SetLives(PawnLives);
+	}
 }
