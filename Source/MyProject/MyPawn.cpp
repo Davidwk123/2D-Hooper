@@ -157,7 +157,7 @@ void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 				bIsPawnSelected = true;
 				// When user picks up Pawn, Pawn is not grounded anymore and user can attempt a correct shoot
 				bIsPawnGrounded = false;
-				bDidPawnShoot = true;
+				bIsPawnShotValid = true;
 			}
 		}
 		else if (bIsPawnSelected && MouseWorldLocation.X > LEFT_BOUNDARY && MouseWorldLocation.X < SHOOTING_BOUNDARY)
@@ -296,19 +296,18 @@ void AMyBasketballPawn::PawnMissed()
 {
 	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
 	
-	// Checks if user correctly shot the ball
-	if (PawnLocation2D.X <= SHOOTING_BOUNDARY && bIsPawnGrounded)
-	{
-		bDidPawnShoot = false;
-	}
-
 	// Pawn's Radius is subtracted from Pawn location to prevent Pawn from losing a life if Pawn is on the Shooting Boundary 
-	if (PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded && bDidPawnShoot && bDidPawnScore == false)
+	if (PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded && bIsPawnShotValid && bDidPawnScore == false)
 	{
 		bDidPawnMiss = true;
 		PawnLives--;
 		PawnWidget->SetLives(PawnLives);
 		// Show PawnHelp Text prompt when ball is misses
+		PawnWidget->SetHelp();
+		PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Visible);
+	}
+	else if(PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded)
+	{
 		PawnWidget->SetHelp();
 		PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -320,6 +319,12 @@ void AMyBasketballPawn::PawnInsideShootingBoundary()
 
 	if (PawnLocation2D.X <= SHOOTING_BOUNDARY)
 	{
+		// Checks if user's shot is valid 
+		if (bIsPawnGrounded)
+		{
+			bIsPawnShotValid = false;
+		}
+
 		PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Hidden);
 		// Resets the check for when user misses/makes the shot 
 		bDidPawnMiss = false;
