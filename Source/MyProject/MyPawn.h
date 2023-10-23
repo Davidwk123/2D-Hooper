@@ -55,6 +55,9 @@ public:
 	// Subtracts from Lives
 	void PawnMissed();
 
+	// Called when Ball is either reset or bounces back inside Boundary
+	void PawnInsideShootingBoundary();
+
 
 protected:
 	// Used to add new Widget from Blueprint

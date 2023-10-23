@@ -7,6 +7,7 @@
 #include "PaperTileMapActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
 #include "MyPawnUserWidget.h"
 
 // Sets default values
@@ -61,6 +62,9 @@ void AMyBasketballPawn::BeginPlay()
 	PawnWidget->SetLives(PawnLives);
 	PawnWidget->SetScore(PawnScore);
 	PawnWidget->AddToViewport();
+	// Hide PawnHelp Text prompt until needed later 
+	PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Collapsed);
+	// Hide complete PawnWidget until user clicks Play
 	PawnWidget->SetVisibility(ESlateVisibility::Collapsed);
 	
 }
@@ -96,6 +100,8 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 
 		// Called when Pawn's velocity reaches max velocity 
 		ResetPawnVelocity();
+
+		PawnInsideShootingBoundary();
 
 		IsPawnGrounded();
 
@@ -152,9 +158,6 @@ void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 				// When user picks up Pawn, Pawn is not grounded anymore and user can attempt a correct shoot
 				bIsPawnGrounded = false;
 				bDidPawnShoot = true;
-				// Resets the check for when user misses/makes the shot 
-				bDidPawnMiss = false;
-				bDidPawnScore = false;
 			}
 		}
 		else if (bIsPawnSelected && MouseWorldLocation.X > LEFT_BOUNDARY && MouseWorldLocation.X < SHOOTING_BOUNDARY)
@@ -284,6 +287,9 @@ void AMyBasketballPawn::PawnScored()
 	bDidPawnScore = true;
 	PawnScore++;
 	PawnWidget->SetScore(PawnScore);
+	// Show PawnHelp Text prompt when ball is misses
+	PawnWidget->SetHelp();
+	PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Visible);
 }
 
 void AMyBasketballPawn::PawnMissed()
@@ -302,5 +308,22 @@ void AMyBasketballPawn::PawnMissed()
 		bDidPawnMiss = true;
 		PawnLives--;
 		PawnWidget->SetLives(PawnLives);
+		// Show PawnHelp Text prompt when ball is misses
+		PawnWidget->SetHelp();
+		PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Visible);
 	}
+}
+
+void AMyBasketballPawn::PawnInsideShootingBoundary()
+{
+	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
+
+	if (PawnLocation2D.X <= SHOOTING_BOUNDARY)
+	{
+		PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Hidden);
+		// Resets the check for when user misses/makes the shot 
+		bDidPawnMiss = false;
+		bDidPawnScore = false;
+	}
+
 }
