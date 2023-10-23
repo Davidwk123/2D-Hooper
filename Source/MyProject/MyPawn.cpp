@@ -149,9 +149,12 @@ void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 			if (Cast<AMyBasketballPawn>(HitResult.GetActor()))
 			{
 				bIsPawnSelected = true;
-				// When user picks up Pawn, Pawn is not grounded anymore and user can shoot
+				// When user picks up Pawn, Pawn is not grounded anymore and user can attempt a correct shoot
 				bIsPawnGrounded = false;
 				bDidPawnShoot = true;
+				// Resets the check for when user misses/makes the shot 
+				bDidPawnMiss = false;
+				bDidPawnScore = false;
 			}
 		}
 		else if (bIsPawnSelected && MouseWorldLocation.X > LEFT_BOUNDARY && MouseWorldLocation.X < SHOOTING_BOUNDARY)
@@ -200,9 +203,6 @@ void AMyBasketballPawn::ResetPawn(const FInputActionValue& Value)
 	if (PawnLocation2D.X > SHOOTING_BOUNDARY && bIsPawnGrounded)
 	{
 		SetPawnPosition(STARTING_X_POSITION, STARTING_Y_POSITION);
-		// Resets that check for user misses/makes the shot 
-		bDidPawnMiss = false;
-		bDidPawnScore = false;
 	}
 }
 
