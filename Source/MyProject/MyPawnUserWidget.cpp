@@ -22,5 +22,13 @@ void UMyPawnUserWidget::SetScore(int PawnScore)
 		Score->SetText(FText::Format(LOCTEXT("CombinedTextKey", "Score: {0}"), PawnScore));
 	}
 }
+
+void UMyPawnUserWidget::SetHelp()
+{
+	if (PawnHelp)
+	{
+		PawnHelp->SetText(FText::FromString(TEXT("Click on Screen to Reset Ball...")));
+	}
+}
 #undef LOCTEXT_NAMESPACE
 #endif

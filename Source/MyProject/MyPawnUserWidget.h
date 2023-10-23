@@ -29,6 +29,9 @@ public:
 
 	void SetScore(int PawnScore);
 
+	// Will display a Text prompt that will notify user to reset the Pawn
+	void SetHelp();
+
 private:
 	
 };
