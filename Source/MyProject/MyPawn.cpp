@@ -109,6 +109,7 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 		if (bDidPawnMiss == false)
 		{
 			PawnMissed();
+
 		}
 		//UE_LOG(LogTemp, Warning, TEXT("bIsMyBool is %s"), IsPawnGrounded() ? TEXT("true") : TEXT("false"));
 }
@@ -306,6 +307,7 @@ void AMyBasketballPawn::PawnMissed()
 		PawnWidget->SetHelp();
 		PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Visible);
 	}
+	// Display PawnHelp Text prompt in case shot is not valid 
 	else if(PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded)
 	{
 		PawnWidget->SetHelp();
