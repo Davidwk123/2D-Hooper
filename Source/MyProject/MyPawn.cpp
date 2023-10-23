@@ -149,8 +149,9 @@ void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 			if (Cast<AMyBasketballPawn>(HitResult.GetActor()))
 			{
 				bIsPawnSelected = true;
-				// When user picks up Pawn, Pawn is not grounded anymore
+				// When user picks up Pawn, Pawn is not grounded anymore and user can shoot
 				bIsPawnGrounded = false;
+				bDidPawnShoot = true;
 			}
 		}
 		else if (bIsPawnSelected && MouseWorldLocation.X > LEFT_BOUNDARY && MouseWorldLocation.X < SHOOTING_BOUNDARY)
@@ -288,8 +289,15 @@ void AMyBasketballPawn::PawnScored()
 void AMyBasketballPawn::PawnMissed()
 {
 	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
+	
+	// Checks if user correctly shot the ball
+	if (PawnLocation2D.X <= SHOOTING_BOUNDARY && bIsPawnGrounded)
+	{
+		bDidPawnShoot = false;
+	}
 
-	if (PawnLocation2D.X > SHOOTING_BOUNDARY && bIsPawnGrounded && bDidPawnScore == false)
+	// Pawn's Radius is subtracted from Pawn location to prevent Pawn from losing a life if Pawn is on the Shooting Boundary 
+	if (PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded && bDidPawnShoot && bDidPawnScore == false)
 	{
 		bDidPawnMiss = true;
 		PawnLives--;
