@@ -52,7 +52,7 @@ public:
 	// Adds to Score
 	void PawnScored();
 
-	// Subtracts from Lives
+	// Defines different cases when the Ball gets shot
 	void PawnShotScenarios();
 
 	// Called when Ball is either reset or bounces back inside Boundary
