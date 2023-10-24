@@ -23,11 +23,11 @@ void UMyPawnUserWidget::SetScore(int PawnScore)
 	}
 }
 
-void UMyPawnUserWidget::SetHelp()
+void UMyPawnUserWidget::SetHelp(FText PawnPrompt)
 {
 	if (PawnHelp)
 	{
-		PawnHelp->SetText(FText::FromString(TEXT("Click on Screen to Reset Ball...")));
+		PawnHelp->SetText(PawnPrompt);
 	}
 }
 #undef LOCTEXT_NAMESPACE
