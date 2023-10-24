@@ -336,6 +336,7 @@ void AMyBasketballPawn::PawnInsideShootingBoundary()
 		{
 			PawnLives--;
 			PawnWidget->SetLives(PawnLives);
+			bIsPawnShotValid = false;
 			PawnWidget->SetHelp(FText::FromString(TEXT("Unlucky Rebound!")));
 		}
 		// Case where user Catches the Rebound and does not lose a Life
@@ -343,9 +344,8 @@ void AMyBasketballPawn::PawnInsideShootingBoundary()
 		{
 			PawnWidget->SetHelp(FText::FromString(TEXT("Nice Catch!\n\nTake Another Shot!")));
 		}
-
 		// Checks if user's shot is not valid 
-		if (bIsPawnGrounded)
+		else if (bIsPawnGrounded)
 		{
 			bIsPawnShotValid = false;
 			PawnWidget->SetHelp(FText::FromString(TEXT("Pick Up Ball to Shoot...")));
