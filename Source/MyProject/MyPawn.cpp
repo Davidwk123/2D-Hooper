@@ -109,7 +109,7 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 		// Check that prevents Pawn from continously losing lives
 		if (bDidPawnMiss == false)
 		{
-			PawnMissed();
+			PawnShotScenarios();
 		}
 		//UE_LOG(LogTemp, Warning, TEXT("bIsMyBool is %s"), IsPawnGrounded() ? TEXT("true") : TEXT("false"));
 }
@@ -288,12 +288,9 @@ void AMyBasketballPawn::PawnScored()
 	bDidPawnScore = true;
 	PawnScore++;
 	PawnWidget->SetScore(PawnScore);
-	// Show PawnHelp Text prompt when ball is misses
-	PawnWidget->SetHelp();
-	PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Visible);
 }
 
-void AMyBasketballPawn::PawnMissed()
+void AMyBasketballPawn::PawnShotScenarios()
 {
 	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
 	
@@ -309,13 +306,20 @@ void AMyBasketballPawn::PawnMissed()
 		bDidPawnRebound = false;
 	}
 	// Check for when Ball rebounds off the Wall/Hoop
-	if (PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded == false && bIsPawnShotValid && bDidPawnScore == false)
+	else if (PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded == false && bIsPawnShotValid && bDidPawnScore == false)
 	{
 		bDidPawnRebound = true;
 	}
 	// Display PawnHelp Text prompt in case shot is not valid 
 	else if(PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded)
 	{
+		PawnWidget->SetHelp();
+		PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Visible);
+	}
+	// Display PawnHelp Text Prompt if Pawn scores 
+	else if (bIsPawnGrounded && bDidPawnScore)
+	{
+		// Show PawnHelp Text prompt when ball is Score
 		PawnWidget->SetHelp();
 		PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -333,6 +337,7 @@ void AMyBasketballPawn::PawnInsideShootingBoundary()
 			PawnLives--;
 			PawnWidget->SetLives(PawnLives);
 		}
+
 		// Checks if user's shot is valid 
 		if (bIsPawnGrounded)
 		{
@@ -340,7 +345,7 @@ void AMyBasketballPawn::PawnInsideShootingBoundary()
 		}
 
 		PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Hidden);
-		// Resets the check for when user misses/makes the shot 
+		// Resets the check for when user misses/makes/rebounds the shot 
 		bDidPawnMiss = false;
 		bDidPawnScore = false;
 		bDidPawnRebound = false;

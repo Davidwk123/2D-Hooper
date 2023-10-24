@@ -53,7 +53,7 @@ public:
 	void PawnScored();
 
 	// Subtracts from Lives
-	void PawnMissed();
+	void PawnShotScenarios();
 
 	// Called when Ball is either reset or bounces back inside Boundary
 	void PawnInsideShootingBoundary();
