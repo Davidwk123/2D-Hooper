@@ -32,6 +32,7 @@ AMyBasketballPawn::AMyBasketballPawn()
 	bIsPawnGrounded = false;
 	bDidPawnScore = false;
 	bDidPawnMiss = false;
+	bDidPawnRebound = false;
 
 	PawnLives = 3;
 	PawnScore = 0;
@@ -109,7 +110,6 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 		if (bDidPawnMiss == false)
 		{
 			PawnMissed();
-
 		}
 		//UE_LOG(LogTemp, Warning, TEXT("bIsMyBool is %s"), IsPawnGrounded() ? TEXT("true") : TEXT("false"));
 }
@@ -306,6 +306,12 @@ void AMyBasketballPawn::PawnMissed()
 		// Show PawnHelp Text prompt when ball is misses
 		PawnWidget->SetHelp();
 		PawnWidget->PawnHelp->SetVisibility(ESlateVisibility::Visible);
+		bDidPawnRebound = false;
+	}
+	// Check for when Ball rebounds off the Wall/Hoop
+	if (PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded == false && bIsPawnShotValid && bDidPawnScore == false)
+	{
+		bDidPawnRebound = true;
 	}
 	// Display PawnHelp Text prompt in case shot is not valid 
 	else if(PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded)
@@ -321,6 +327,12 @@ void AMyBasketballPawn::PawnInsideShootingBoundary()
 
 	if (PawnLocation2D.X <= SHOOTING_BOUNDARY)
 	{
+		// Checks for when Ball rebounds off the Wall/Hoop and makes it back to the Shooting Boundary
+		if (bDidPawnRebound && bDidPawnScore == false && bIsPawnSelected == false)
+		{
+			PawnLives--;
+			PawnWidget->SetLives(PawnLives);
+		}
 		// Checks if user's shot is valid 
 		if (bIsPawnGrounded)
 		{
@@ -331,6 +343,7 @@ void AMyBasketballPawn::PawnInsideShootingBoundary()
 		// Resets the check for when user misses/makes the shot 
 		bDidPawnMiss = false;
 		bDidPawnScore = false;
+		bDidPawnRebound = false;
 	}
 
 }

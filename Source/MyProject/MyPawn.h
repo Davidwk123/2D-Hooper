@@ -93,6 +93,7 @@ private:
 	bool bIsPawnShotValid;
 	bool bDidPawnScore;
 	bool bDidPawnMiss;
+	bool bDidPawnRebound;
 	
 
 	int PawnLives;
