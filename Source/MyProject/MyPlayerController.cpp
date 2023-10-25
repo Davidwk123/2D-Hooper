@@ -2,6 +2,7 @@
 
 
 #include "MyPlayerController.h"
+#include "MyPauseMenuWidget.h"
 
 
 void AMyPlayerController::BeginPlay() 

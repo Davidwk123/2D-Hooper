@@ -320,6 +320,7 @@ void AMyBasketballPawn::PawnShotScenarios()
 	// Display PawnHelp Text Prompt if Pawn scores 
 	else if (bIsPawnGrounded && bDidPawnScore)
 	{
+		bDidPawnRebound = false;
 		// Show PawnHelp Text prompt when ball is Score
 		PawnWidget->SetHelp(FText::FromString(TEXT("Nice Shot!\n\nClick on Screen to Reset Ball...")));
 	}
@@ -332,20 +333,22 @@ void AMyBasketballPawn::PawnInsideShootingBoundary()
 	if (PawnLocation2D.X <= SHOOTING_BOUNDARY)
 	{
 		// Checks for when Ball rebounds off the Wall/Hoop and makes it back to the Shooting Boundary
-		if (bDidPawnRebound && bDidPawnScore == false && bIsPawnSelected == false)
+		if (bDidPawnRebound && bDidPawnScore == false && bIsPawnGrounded)
 		{
 			PawnLives--;
 			PawnWidget->SetLives(PawnLives);
-			bIsPawnShotValid = false;
+			bDidPawnRebound = false;
 			PawnWidget->SetHelp(FText::FromString(TEXT("Unlucky Rebound!")));
 		}
 		// Case where user Catches the Rebound and does not lose a Life
 		else if(bDidPawnRebound && bDidPawnScore == false && bIsPawnSelected == true)
 		{
+			bDidPawnRebound = false;
 			PawnWidget->SetHelp(FText::FromString(TEXT("Nice Catch!\n\nTake Another Shot!")));
 		}
+
 		// Checks if user's shot is not valid 
-		else if (bIsPawnGrounded)
+		if (bIsPawnGrounded)
 		{
 			bIsPawnShotValid = false;
 			PawnWidget->SetHelp(FText::FromString(TEXT("Pick Up Ball to Shoot...")));
@@ -354,7 +357,6 @@ void AMyBasketballPawn::PawnInsideShootingBoundary()
 		// Resets the check for when user misses/makes/rebounds the shot 
 		bDidPawnMiss = false;
 		bDidPawnScore = false;
-		bDidPawnRebound = false;
 	}
 
 }
