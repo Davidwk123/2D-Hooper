@@ -2,6 +2,7 @@
 
 #include "MyMainMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "MyPlayerController.h"
 #include "MyPawn.h"
 #include "Components/Button.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -15,11 +16,14 @@ void UMyMainMenuWidget::NativeConstruct()
 
 void UMyMainMenuWidget::ClickPlay()
 {
-	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyPlayerController* MyPlayerController = Cast<AMyPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 	
+	// Hide MainMenu Widget and Display Pause/Pawn Widgets
 	SetVisibility(ESlateVisibility::Collapsed);
+	MyPlayerController->GetPauseMenuWidget()->SetVisibility(ESlateVisibility::Visible);
 	Ball->GetPawnWidget()->SetVisibility(ESlateVisibility::Visible);
+	
 	// Make Pawn moveable again after user clicks Play
 	Ball->GetComponentByClass<UPaperSpriteComponent>()->SetMobility(EComponentMobility::Movable);
 }

@@ -18,7 +18,7 @@ public:
 
 	// Canvas Widget that holds Continue and Quit Buttons 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	class UCanvas* PausePanel;
+	class UCanvasPanel* PausePanel;
 
 	// Button Widget to Pause game
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
