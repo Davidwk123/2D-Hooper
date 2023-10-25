@@ -13,5 +13,34 @@ UCLASS()
 class MYPROJECT_API UMyPauseMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+
+	// Canvas Widget that holds Continue and Quit Buttons 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UCanvas* PausePanel;
+
+	// Button Widget to Pause game
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UButton* Pause;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UButton* Continue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UButton* Quit;
+
+	UFUNCTION()
+	void ClickPause();
+
+	UFUNCTION()
+	void ClickContinue();
+
+	UFUNCTION()
+	void ClickQuit();
+
+protected:
+	// Used to define the Dynamic when user clicks on a button
+	virtual void NativeConstruct() override;
 	
 };
