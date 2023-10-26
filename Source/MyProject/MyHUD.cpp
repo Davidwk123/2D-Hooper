@@ -20,7 +20,7 @@ void AMyHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Creates new Widget from MainMenuWidgetClass
+	// Creates new Widget from HUDWidgetClass
 	HUDWidget = CreateWidget<UMyHUDWidget>(GetWorld(), HUDWidgetClass);
 	HUDWidget->AddToViewport();
 }
