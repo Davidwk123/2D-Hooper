@@ -19,6 +19,9 @@ public:
 	* MainMenuWidget
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* MainMenuWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UButton* Play;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
@@ -33,6 +36,9 @@ public:
 	/*
 	* PawnUserWidget
 	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* PawnUserWidget;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* Lives;
 
@@ -53,6 +59,9 @@ public:
 	/*
 	* PauseMenuWidget
 	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* PauseMenuWidget;
+
 	// Canvas Widget that holds Continue and Quit Buttons 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UCanvasPanel* PausePanel;
