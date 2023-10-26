@@ -5,6 +5,7 @@
 #include "MyPawn.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
+#include "Components/TextBlock.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -15,6 +16,7 @@ void UMyHUDWidget::ClickPlay()
 
 	// Hide MainMenuWidget and Display Pause/Pawn Widgets
 	MainMenuWidget->SetVisibility(ESlateVisibility::Collapsed);
+	PausePanel->SetVisibility(ESlateVisibility::Collapsed);
 
 	// Make Pawn moveable again after user clicks Play
 	Ball->GetComponentByClass<UPaperSpriteComponent>()->SetMobility(EComponentMobility::Movable);
@@ -26,17 +28,34 @@ void UMyHUDWidget::ClickMenuQuit()
 	UKismetSystemLibrary::QuitGame(GetWorld(), UGameplayStatics::GetPlayerController(this, 0), QuitPreference, true);
 }
 
+// The "if" and "define" allows the use of the "LOCTEXT" in the functions, which allow int values to be used with string values 
+#if WITH_EDITOR
+#define LOCTEXT_NAMESPACE "UMG"
 void UMyHUDWidget::SetLives(int PawnLives)
 {
+	if (Lives)
+	{
+		Lives->SetText(FText::Format(LOCTEXT("CombinedTextKey", "Lives: {0}"), PawnLives));
+	}
 }
 
 void UMyHUDWidget::SetScore(int PawnScore)
 {
+	if (Score)
+	{
+		Score->SetText(FText::Format(LOCTEXT("CombinedTextKey", "Score: {0}"), PawnScore));
+	}
 }
 
 void UMyHUDWidget::SetHelp(FText PawnPrompt)
 {
+	if (PawnHelp)
+	{
+		PawnHelp->SetText(PawnPrompt);
+	}
 }
+#undef LOCTEXT_NAMESPACE
+#endif
 
 void UMyHUDWidget::ClickPause()
 {
