@@ -7,7 +7,7 @@
 #include "PaperSpriteComponent.h"
 #include "InputActionValue.h"
 #include "Blueprint/UserWidget.h"
-#include "MyPawnUserWidget.h"
+#include "MyHUDWidget.h"
 #include "MyPawn.generated.h"
 
 
@@ -38,8 +38,6 @@ public:
 	// Mechanic for when user clicks and drags Pawn
 	FVector GetSpringForce(FVector2d MousePosition);
 
-	UMyPawnUserWidget* GetPawnWidget();
-
 	// Called to reset velocity of Pawn to prevent it from clipping out of bounds
 	void ResetPawnVelocity(float Drag = 0.f);
 	
@@ -60,10 +58,6 @@ public:
 
 
 protected:
-	// Used to add new Widget from Blueprint
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UMyPawnUserWidget> PawnWidgetClass;
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -82,7 +76,7 @@ private:
 	class UMyInputConfigData* InputActions;
 
 	// Stores new Widget from PawnWidgetClass
-	class UMyPawnUserWidget* PawnWidget;
+	class UMyHUDWidget* HUDWidget;
 
 	void SetPawnPosition(float PawnPositionX, float PawnPositionY);
 	
@@ -94,7 +88,6 @@ private:
 	bool bDidPawnScore;
 	bool bDidPawnMiss;
 	bool bDidPawnRebound;
-	
 
 	int PawnLives;
 	int PawnScore;
