@@ -2,13 +2,18 @@
 
 #include "MyHUD.h"
 #include "Blueprint/UserWidget.h"
-#include "MyMainMenuWidget.h"
+#include "MyHUDWidget.h"
 #include "Components/Button.h"
 
 AMyHUD::AMyHUD()
 {
-	MainMenuWidgetClass = nullptr;
-	MainMenuWidget = nullptr;
+	HUDWidgetClass = nullptr;
+	HUDWidget = nullptr;
+}
+
+UMyHUDWidget* AMyHUD::GetHUDWidget()
+{
+	return HUDWidget;
 }
 
 void AMyHUD::BeginPlay()
@@ -16,8 +21,8 @@ void AMyHUD::BeginPlay()
 	Super::BeginPlay();
 
 	// Creates new Widget from MainMenuWidgetClass
-	MainMenuWidget = CreateWidget<UMyMainMenuWidget>(GetWorld(), MainMenuWidgetClass);
-	MainMenuWidget->AddToViewport();
+	HUDWidget = CreateWidget<UMyHUDWidget>(GetWorld(), HUDWidgetClass);
+	HUDWidget->AddToViewport();
 }
 
 void AMyHUD::DrawHUD()

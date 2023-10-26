@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "MyMainMenuWidget.h"
+#include "MyHUDWidget.h"
 #include "MyHUD.generated.h"
 
 /**
@@ -18,16 +18,18 @@ class MYPROJECT_API AMyHUD : public AHUD
 public:
 	AMyHUD();
 
+	UMyHUDWidget* GetHUDWidget();
+
 protected:
 	// Used to add new Widget from Blueprint
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UMyMainMenuWidget> MainMenuWidgetClass;
+	TSubclassOf<class UMyHUDWidget> HUDWidgetClass;
 
 	virtual void BeginPlay() override;
 	virtual void DrawHUD() override;
 
 private:
 	// Stores new Widget from MainMenuWidgetClass
-	class UMyMainMenuWidget* MainMenuWidget;
+	class UMyHUDWidget* HUDWidget;
 	
 };

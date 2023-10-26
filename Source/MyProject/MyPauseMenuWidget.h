@@ -27,7 +27,7 @@ public:
 	class UButton* Continue;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	class UButton* PauseQuit;
+	class UButton* Quit;
 
 	UFUNCTION()
 	void ClickPause();
@@ -36,7 +36,7 @@ public:
 	void ClickContinue();
 
 	UFUNCTION()
-	void ClickPauseQuit();
+	void ClickQuit();
 
 protected:
 	// Used to define the Dynamic when user clicks on a button
