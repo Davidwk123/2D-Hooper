@@ -2,9 +2,6 @@
 
 
 #include "MyPlayerController.h"
-#include "Blueprint/UserWidget.h"
-#include "MyPauseMenuWidget.h"
-
 
 void AMyPlayerController::BeginPlay() 
 {
