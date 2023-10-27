@@ -59,10 +59,26 @@ void UMyHUDWidget::SetHelp(FText PawnPrompt)
 
 void UMyHUDWidget::ClickPause()
 {
+	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
+
+	// Freezes everything in World
+	MyPlayerController->SetPause(true);
+
+	PawnHelp->SetVisibility(ESlateVisibility::Hidden);
+	PausePanel->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UMyHUDWidget::ClickContinue()
 {
+	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
+
+	// Unfreezes everything in World
+	MyPlayerController->SetPause(false);
+
+	PawnHelp->SetVisibility(ESlateVisibility::Visible);
+	PausePanel->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UMyHUDWidget::ClickPauseQuit()
@@ -74,4 +90,6 @@ void UMyHUDWidget::NativeConstruct()
 	Super::NativeConstruct();
 	Play->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickPlay);
 	MenuQuit->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickMenuQuit);
+	Pause->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickPause);
+	Continue->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickContinue);
 }

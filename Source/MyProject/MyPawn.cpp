@@ -110,6 +110,9 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 		{
 			PawnShotScenarios();
 		}
+
+		/*FVector Velocity = SpriteComponent->GetComponentVelocity();
+		UE_LOG(LogTemp, Warning, TEXT("Actor Velocity: %s"), *Velocity.ToString());*/
 }
 
 // Called to bind functionality to input
