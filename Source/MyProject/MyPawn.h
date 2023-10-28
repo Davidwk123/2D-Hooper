@@ -23,9 +23,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	// Called when user clicks and drags Pawn
 	void MovePawn(const FInputActionValue& Value);
 
@@ -34,6 +31,9 @@ public:
 
 	// Called when user wants to reset Pawn's position
 	void ResetPawn(const FInputActionValue& Value);
+
+	// Input Action that will call HUDWidget's ClickPause()
+	void PressPause(const FInputActionValue& Value);
 
 	// Mechanic for when user clicks and drags Pawn
 	FVector GetSpringForce(FVector2d MousePosition);
@@ -61,6 +61,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 private:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* DefaultRoot;
@@ -75,7 +78,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	class UMyInputConfigData* InputActions;
 
-	// Stores new Widget from PawnWidgetClass
+	// Stores new Widget from HUDWidget
 	class UMyHUDWidget* HUDWidget;
 
 	void SetPawnPosition(float PawnPositionX, float PawnPositionY);

@@ -29,7 +29,7 @@ protected:
 	virtual void DrawHUD() override;
 
 private:
-	// Stores new Widget from MainMenuWidgetClass
+	// Stores new Widget from HUDWidgetClass
 	class UMyHUDWidget* HUDWidget;
 	
 };

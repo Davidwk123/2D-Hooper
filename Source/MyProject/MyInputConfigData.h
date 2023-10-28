@@ -8,7 +8,7 @@
 #include "MyInputConfigData.generated.h"
 
 /**
- Class used to define Pawn's Input Actions that will be stored inside a InputMappingContext
+ Class used to define Pawn's/PlayerController's Input Actions that will be stored inside a InputMappingContext
  */
 UCLASS()
 class MYPROJECT_API UMyInputConfigData : public UDataAsset
@@ -21,5 +21,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	class UInputAction* InputReset;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	class UInputAction* InputPause;
 	
 };

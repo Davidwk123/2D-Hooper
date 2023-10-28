@@ -132,6 +132,7 @@ void AMyBasketballPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PEI->BindAction(InputActions->InputMove, ETriggerEvent::Triggered, this, &AMyBasketballPawn::MovePawn);
 	PEI->BindAction(InputActions->InputMove, ETriggerEvent::Completed, this, &AMyBasketballPawn::DropPawn);
 	PEI->BindAction(InputActions->InputReset, ETriggerEvent::Triggered, this, &AMyBasketballPawn::ResetPawn);
+	PEI->BindAction(InputActions->InputPause, ETriggerEvent::Triggered, this, &AMyBasketballPawn::PressPause);
 }
 
 void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
@@ -210,6 +211,11 @@ void AMyBasketballPawn::ResetPawn(const FInputActionValue& Value)
 	{
 		SetPawnPosition(STARTING_X_POSITION, STARTING_Y_POSITION);
 	}
+}
+
+void AMyBasketballPawn::PressPause(const FInputActionValue& Value)
+{
+	HUDWidget->ClickPause();
 }
 
 FVector AMyBasketballPawn::GetSpringForce(FVector2d MousePosition)
