@@ -15,13 +15,17 @@ class MYPROJECT_API AMyPlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	AMyPlayerController();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-private:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
-};
+	// Called to bind functionality to input
+	virtual void SetupInputComponent() override;
+
+private:
+};	
