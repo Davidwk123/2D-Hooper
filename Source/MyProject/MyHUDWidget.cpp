@@ -85,11 +85,24 @@ void UMyHUDWidget::ClickPauseQuit()
 {
 }
 
+void UMyHUDWidget::ClickPlayAgain()
+{
+}
+
+void UMyHUDWidget::ClickGameOverQuit()
+{
+}
+
 void UMyHUDWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
 	Play->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickPlay);
 	MenuQuit->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickMenuQuit);
+
 	Pause->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickPause);
 	Continue->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickContinue);
+
+	PlayAgain->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickPlayAgain);
+	GameOverQuit->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickGameOverQuit);
 }

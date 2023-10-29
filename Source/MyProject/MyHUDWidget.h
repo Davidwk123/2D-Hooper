@@ -86,6 +86,32 @@ public:
 	UFUNCTION()
 	void ClickPauseQuit();
 
+	/*
+	* GameOverMenuWidget
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* GameOverMenuWidget;
+
+	// Canvas Widget that holds Play Again and Quit Buttons 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* GameOverPanel;
+
+	// Text Widget to display Highscore
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* HighScore;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UButton* PlayAgain;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UButton* GameOverQuit;
+
+	UFUNCTION()
+	void ClickPlayAgain();
+
+	UFUNCTION()
+	void ClickGameOverQuit();
+
 protected:
 	// Used to define the Dynamic when user clicks on a button
 	virtual void NativeConstruct() override;
