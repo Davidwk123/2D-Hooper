@@ -234,6 +234,11 @@ FVector AMyBasketballPawn::GetSpringForce(FVector2d MousePosition)
 	return SpringForce;
 }
 
+int AMyBasketballPawn::GetPawnScore()
+{
+	return PawnScore;
+}
+
 void AMyBasketballPawn::ResetPawnVelocity(float Drag)
 {
 	// This check is to see if Pawn is unclicked by user, if so reset the drag to the default value 

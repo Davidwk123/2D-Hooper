@@ -38,6 +38,8 @@ public:
 	// Mechanic for when user clicks and drags Pawn
 	FVector GetSpringForce(FVector2d MousePosition);
 
+	int GetPawnScore();
+
 	// Called to reset velocity of Pawn to prevent it from clipping out of bounds
 	void ResetPawnVelocity(float Drag = 0.f);
 	

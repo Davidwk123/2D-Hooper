@@ -61,7 +61,7 @@ void UMyHUDWidget::SetHighScore(int PawnScore)
 {
 	if (HighScore)
 	{
-		HighScore->SetText(FText::Format(LOCTEXT("CombinedTextKey", "Score: {0}"), PawnScore));
+		HighScore->SetText(FText::Format(LOCTEXT("CombinedTextKey", "\tScore: {0}"), PawnScore));
 	}
 }
 
@@ -94,9 +94,14 @@ void UMyHUDWidget::ClickContinue()
 
 void UMyHUDWidget::ClickPauseQuit()
 {
+	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
+
 	PawnUserWidget->SetVisibility(ESlateVisibility::Hidden);
 	PauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
 	GameOverPanel->SetVisibility(ESlateVisibility::Visible);
+
+	SetHighScore(Ball->GetPawnScore());
 }
 
 void UMyHUDWidget::ClickPlayAgain()
