@@ -209,8 +209,13 @@ void AMyBasketballPawn::ResetPawn(const FInputActionValue& Value)
 	
 	if (PawnLocation2D.X > SHOOTING_BOUNDARY && bIsPawnGrounded)
 	{
-		SetPawnPosition(STARTING_X_POSITION, STARTING_Y_POSITION);
+		ResetPawnDefaultPosition();
 	}
+}
+
+void AMyBasketballPawn::ResetPawnDefaultPosition()
+{
+	SetPawnPosition(STARTING_X_POSITION, STARTING_Y_POSITION);
 }
 
 void AMyBasketballPawn::PressPause(const FInputActionValue& Value)
@@ -297,6 +302,23 @@ void AMyBasketballPawn::PawnScored()
 	PawnScore++;
 	HUDWidget->SetScore(PawnScore);
 	HUDWidget->SetHelp(FText::FromString(TEXT("Nice Shot!")));
+}
+
+void AMyBasketballPawn::ResetPawnValues()
+{
+	PawnScore = 0;
+	PawnLives = 3;
+	HUDWidget->SetScore(PawnScore);
+	HUDWidget->SetLives(PawnLives);
+
+	bIsPawnSelected = false;
+	bIsPawnGrounded = false;
+	bDidPawnScore = false;
+	bDidPawnMiss = false;
+	bDidPawnRebound = false;
+	bIsPawnShotValid = false;
+
+	HUDWidget->SetHelp(FText::FromString(TEXT("Here We Go!")));
 }
 
 void AMyBasketballPawn::PawnShotScenarios()

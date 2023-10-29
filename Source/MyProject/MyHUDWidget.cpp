@@ -16,7 +16,9 @@ void UMyHUDWidget::ClickPlay()
 
 	// Hide MainMenuWidget and Display Pause/Pawn Widgets
 	PausePanel->SetVisibility(ESlateVisibility::Collapsed);
+
 	GameOverPanel->SetVisibility(ESlateVisibility::Collapsed);
+
 	MainMenuWidget->SetVisibility(ESlateVisibility::Collapsed);
 	
 	// Unpause game and make pawn moveable again after user clicks Play, also prevents user from pressing Pause during Main Menu screen
@@ -77,6 +79,7 @@ void UMyHUDWidget::ClickPause()
 	MyPlayerController->SetPause(true);
 
 	PausePanel->SetVisibility(ESlateVisibility::Visible);
+
 	PawnHelp->SetVisibility(ESlateVisibility::Hidden);
 }
 
@@ -89,6 +92,7 @@ void UMyHUDWidget::ClickContinue()
 	MyPlayerController->SetPause(false);
 
 	PawnHelp->SetVisibility(ESlateVisibility::Visible);
+
 	PausePanel->SetVisibility(ESlateVisibility::Hidden);
 }
 
@@ -98,7 +102,9 @@ void UMyHUDWidget::ClickPauseQuit()
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 
 	PawnUserWidget->SetVisibility(ESlateVisibility::Hidden);
+
 	PauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
+
 	GameOverPanel->SetVisibility(ESlateVisibility::Visible);
 
 	SetHighScore(Ball->GetPawnScore());
@@ -106,6 +112,20 @@ void UMyHUDWidget::ClickPauseQuit()
 
 void UMyHUDWidget::ClickPlayAgain()
 {
+	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
+
+	PawnUserWidget->SetVisibility(ESlateVisibility::Visible);
+	PawnHelp->SetVisibility(ESlateVisibility::Visible);
+
+	PauseMenuWidget->SetVisibility(ESlateVisibility::Visible);
+	PausePanel->SetVisibility(ESlateVisibility::Hidden);
+
+	GameOverPanel->SetVisibility(ESlateVisibility::Hidden);
+
+	Ball->ResetPawnDefaultPosition();
+	Ball->ResetPawnValues();
+	MyPlayerController->SetPause(false);
 }
 
 void UMyHUDWidget::ClickGameOverQuit()

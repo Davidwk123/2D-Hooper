@@ -32,6 +32,8 @@ public:
 	// Called when user wants to reset Pawn's position
 	void ResetPawn(const FInputActionValue& Value);
 
+	void ResetPawnDefaultPosition();
+
 	// Input Action that will call HUDWidget's ClickPause()
 	void PressPause(const FInputActionValue& Value);
 
@@ -51,6 +53,9 @@ public:
 
 	// Adds to Score
 	void PawnScored();
+
+	// Reset Pawn's values to default 
+	void ResetPawnValues();
 
 	// Defines different cases when the Ball gets shot
 	void PawnShotScenarios();
