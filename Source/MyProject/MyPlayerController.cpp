@@ -17,8 +17,6 @@ void AMyPlayerController::BeginPlay()
     Super::BeginPlay();
     this->bShowMouseCursor = true;
 
-    // Pauses Gameplay at the start of the Game to prevent Ball from moving 
-    SetPause(true);
 }
 
 void AMyPlayerController::Tick(float DeltaTime)

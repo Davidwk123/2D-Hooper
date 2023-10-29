@@ -20,6 +20,7 @@ void UMyHUDWidget::ClickPlay()
 	MainMenuWidget->SetVisibility(ESlateVisibility::Collapsed);
 	
 	// Unpause game and make pawn moveable again after user clicks Play, also prevents user from pressing Pause during Main Menu screen
+	Ball->GetComponentByClass<UPaperSpriteComponent>()->SetMobility(EComponentMobility::Movable);
 	MyPlayerController->SetPause(false);
 }
 

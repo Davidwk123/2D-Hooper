@@ -56,6 +56,9 @@ void AMyBasketballPawn::BeginPlay()
 	float SpriteMass = 0.5f;
 	SpriteComponent->SetMassScale(NAME_None, SpriteMass);
 
+	// Set Pawn to be unmoveable, so user can not interact with pawn in main menu screen
+	SpriteComponent->SetMobility(EComponentMobility::Stationary);
+
 	// Initialize PawnUserWidget 
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
