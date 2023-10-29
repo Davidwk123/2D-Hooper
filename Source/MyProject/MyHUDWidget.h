@@ -112,6 +112,8 @@ public:
 	UFUNCTION()
 	void ClickGameOverQuit();
 
+	void SetHighScore(int PawnScore);
+
 protected:
 	// Used to define the Dynamic when user clicks on a button
 	virtual void NativeConstruct() override;

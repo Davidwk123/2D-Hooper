@@ -56,6 +56,15 @@ void UMyHUDWidget::SetHelp(FText PawnPrompt)
 		PawnHelp->SetText(PawnPrompt);
 	}
 }
+
+void UMyHUDWidget::SetHighScore(int PawnScore)
+{
+	if (HighScore)
+	{
+		HighScore->SetText(FText::Format(LOCTEXT("CombinedTextKey", "Score: {0}"), PawnScore));
+	}
+}
+
 #undef LOCTEXT_NAMESPACE
 #endif
 
@@ -85,6 +94,9 @@ void UMyHUDWidget::ClickContinue()
 
 void UMyHUDWidget::ClickPauseQuit()
 {
+	PawnUserWidget->SetVisibility(ESlateVisibility::Hidden);
+	PauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);
+	GameOverPanel->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UMyHUDWidget::ClickPlayAgain()
@@ -95,6 +107,7 @@ void UMyHUDWidget::ClickGameOverQuit()
 {
 }
 
+
 void UMyHUDWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -104,6 +117,7 @@ void UMyHUDWidget::NativeConstruct()
 
 	Pause->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickPause);
 	Continue->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickContinue);
+	PauseQuit->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickPauseQuit);
 
 	PlayAgain->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickPlayAgain);
 	GameOverQuit->OnClicked.AddDynamic(this, &UMyHUDWidget::ClickGameOverQuit);
