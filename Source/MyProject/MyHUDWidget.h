@@ -7,7 +7,7 @@
 #include "MyHUDWidget.generated.h"
 
 /**
- * HudWidget will hold all Widget functionality 
+ * HudWidget will hold all Widget functionality inside HUD
  */
 UCLASS()
 class MYPROJECT_API UMyHUDWidget : public UUserWidget

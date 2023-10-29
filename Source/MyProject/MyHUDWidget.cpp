@@ -15,9 +15,9 @@ void UMyHUDWidget::ClickPlay()
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 
 	// Hide MainMenuWidget and Display Pause/Pawn Widgets
-	MainMenuWidget->SetVisibility(ESlateVisibility::Collapsed);
 	PausePanel->SetVisibility(ESlateVisibility::Collapsed);
-
+	MainMenuWidget->SetVisibility(ESlateVisibility::Collapsed);
+	
 	// Make Pawn moveable again after user clicks Play
 	Ball->GetComponentByClass<UPaperSpriteComponent>()->SetMobility(EComponentMobility::Movable);
 }
@@ -65,8 +65,8 @@ void UMyHUDWidget::ClickPause()
 	// Freezes everything in World
 	MyPlayerController->SetPause(true);
 
-	PawnHelp->SetVisibility(ESlateVisibility::Hidden);
 	PausePanel->SetVisibility(ESlateVisibility::Visible);
+	PawnHelp->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UMyHUDWidget::ClickContinue()

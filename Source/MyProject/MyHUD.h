@@ -31,5 +31,5 @@ protected:
 private:
 	// Stores new Widget from HUDWidgetClass
 	class UMyHUDWidget* HUDWidget;
-	
+
 };
