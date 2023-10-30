@@ -130,8 +130,24 @@ void UMyHUDWidget::ClickPlayAgain()
 
 void UMyHUDWidget::ClickGameOverQuit()
 {
-}
+	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 
+	MainMenuWidget->SetVisibility(ESlateVisibility::Visible);
+
+	PawnUserWidget->SetVisibility(ESlateVisibility::Visible);
+	PawnHelp->SetVisibility(ESlateVisibility::Visible);
+
+	PauseMenuWidget->SetVisibility(ESlateVisibility::Visible);
+	PausePanel->SetVisibility(ESlateVisibility::Hidden);
+
+	GameOverPanel->SetVisibility(ESlateVisibility::Hidden);
+
+	Ball->ResetPawnDefaultPosition();
+	Ball->ResetPawnValues();
+	Ball->GetComponentByClass<UPaperSpriteComponent>()->SetMobility(EComponentMobility::Stationary);
+	MyPlayerController->SetPause(false);
+}
 
 void UMyHUDWidget::NativeConstruct()
 {
