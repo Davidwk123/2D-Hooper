@@ -101,6 +101,9 @@ void UMyHUDWidget::ClickPauseQuit()
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 
+	// Called again if function is called from losing all lives 
+	MyPlayerController->SetPause(true);
+
 	PawnUserWidget->SetVisibility(ESlateVisibility::Hidden);
 
 	PauseMenuWidget->SetVisibility(ESlateVisibility::Hidden);

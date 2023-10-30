@@ -66,7 +66,7 @@ void AMyBasketballPawn::BeginPlay()
 	HUDWidget->SetLives(PawnLives);
 	HUDWidget->SetScore(PawnScore);
 	// Starting PawnHelp Prompt
-	HUDWidget->SetHelp(FText::FromString(TEXT("Here We Go!")));
+	HUDWidget->SetHelp(FText::FromString(TEXT("Here we go!")));
 }
 
 void AMyBasketballPawn::SetPawnPosition(float PawnPositionX, float PawnPositionY)
@@ -86,6 +86,15 @@ void AMyBasketballPawn::CheckPawnOutOfBounds(float PawnPositionX, float PawnPosi
 	if (PawnPositionXEdge <= LEFT_BOUNDARY || PawnPositionXEdge >= RIGHT_BOUNDARY || PawnPositionYEdge <= GROUND_HEIGHT)
 	{
 		SetPawnPosition(STARTING_X_POSITION, STARTING_Y_POSITION);
+	}
+}
+
+void AMyBasketballPawn::PawnGameOver()
+{
+	if (PawnLives == 0)
+	{
+		// Original function is when user quits from PauseMenu but it has same functionality for game over state
+		HUDWidget->ClickPauseQuit();
 	}
 }
 
@@ -110,6 +119,8 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 		{
 			PawnShotScenarios();
 		}
+
+		PawnGameOver();
 
 		/*FVector Velocity = SpriteComponent->GetComponentVelocity();
 		UE_LOG(LogTemp, Warning, TEXT("Actor Velocity: %s"), *Velocity.ToString());*/
@@ -183,7 +194,7 @@ void AMyBasketballPawn::MovePawn(const FInputActionValue& Value)
 			if (MouseWorldLocation.Z > GROUND_HEIGHT && MouseWorldLocation.Z < TOP_BOUNDARY)
 			{
 				SetPawnPosition(SHOOTING_BOUNDARY, MouseWorldLocation.Z);
-				HUDWidget->SetHelp(FText::FromString(TEXT("You Can Only Shoot\nBehind the Red Line...")));
+				HUDWidget->SetHelp(FText::FromString(TEXT("You can only shoot\nbehind the red line...")));
 			}
 		}
 		else if (bIsPawnSelected && MouseWorldLocation.X <= LEFT_BOUNDARY)
@@ -301,7 +312,7 @@ void AMyBasketballPawn::PawnScored()
 	bDidPawnScore = true;
 	PawnScore++;
 	HUDWidget->SetScore(PawnScore);
-	HUDWidget->SetHelp(FText::FromString(TEXT("Nice Shot!")));
+	HUDWidget->SetHelp(FText::FromString(TEXT("Nice shot!")));
 }
 
 void AMyBasketballPawn::ResetPawnValues()
@@ -318,7 +329,7 @@ void AMyBasketballPawn::ResetPawnValues()
 	bDidPawnRebound = false;
 	bIsPawnShotValid = false;
 
-	HUDWidget->SetHelp(FText::FromString(TEXT("Here We Go!")));
+	HUDWidget->SetHelp(FText::FromString(TEXT("Here we go!")));
 }
 
 void AMyBasketballPawn::PawnShotScenarios()
@@ -333,25 +344,25 @@ void AMyBasketballPawn::PawnShotScenarios()
 		HUDWidget->SetLives(PawnLives);
 		bDidPawnRebound = false;
 		// Show PawnHelp Text prompt when ball is misses
-		HUDWidget->SetHelp(FText::FromString(TEXT("Nice Try!\n\nClick on Screen to Reset Ball...")));
+		HUDWidget->SetHelp(FText::FromString(TEXT("Nice try!\n\nClick on screen to reset ball...")));
 	}
 	// Check for when Ball rebounds off the Wall/Hoop
 	else if (PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded == false && bIsPawnShotValid && bDidPawnScore == false)
 	{
 		bDidPawnRebound = true;
-		HUDWidget->SetHelp(FText::FromString(TEXT("Shot is Up...")));
+		HUDWidget->SetHelp(FText::FromString(TEXT("Shot is up...")));
 	}
 	// Display PawnHelp Text prompt in case shot is not valid 
 	else if(PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded && bDidPawnScore == false)
 	{
-		HUDWidget->SetHelp(FText::FromString(TEXT("Oops!\n\nClick on Screen to Reset Ball...")));
+		HUDWidget->SetHelp(FText::FromString(TEXT("Oops!\n\nClick on screen to reset ball...")));
 	}
 	// Display PawnHelp Text Prompt if Pawn scores 
 	else if (bIsPawnGrounded && bDidPawnScore)
 	{
 		bDidPawnRebound = false;
 		// Show PawnHelp Text prompt when ball is Score
-		HUDWidget->SetHelp(FText::FromString(TEXT("Nice Shot!\n\nClick on Screen to Reset Ball...")));
+		HUDWidget->SetHelp(FText::FromString(TEXT("Nice shot!\n\nClick on screen to reset ball...")));
 	}
 }
 
@@ -367,20 +378,20 @@ void AMyBasketballPawn::PawnInsideShootingBoundary()
 			PawnLives--;
 			HUDWidget->SetLives(PawnLives);
 			bDidPawnRebound = false;
-			HUDWidget->SetHelp(FText::FromString(TEXT("Unlucky Rebound!")));
+			HUDWidget->SetHelp(FText::FromString(TEXT("Unlucky rebound!")));
 		}
 		// Case where user Catches the Rebound and does not lose a Life
 		else if(bDidPawnRebound && bDidPawnScore == false && bIsPawnSelected == true)
 		{
 			bDidPawnRebound = false;
-			HUDWidget->SetHelp(FText::FromString(TEXT("Nice Catch!\n\nTake Another Shot!")));
+			HUDWidget->SetHelp(FText::FromString(TEXT("Nice Catch!\n\nTake another shot!")));
 		}
 
 		// Checks if user's shot is not valid 
 		if (bIsPawnGrounded)
 		{
 			bIsPawnShotValid = false;
-			HUDWidget->SetHelp(FText::FromString(TEXT("Pick Up Ball to Shoot...")));
+			HUDWidget->SetHelp(FText::FromString(TEXT("Pick up ball to shoot...\nFlick mouse in the direction of the hoop...\nAnd let go!")));
 		}
 
 		// Resets the check for when user misses/makes/rebounds the shot 

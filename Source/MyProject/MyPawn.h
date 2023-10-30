@@ -92,6 +92,8 @@ private:
 	
 	void CheckPawnOutOfBounds(float PawnPositionX, float PawnPositionY);
 
+	void PawnGameOver();
+
 	bool bIsPawnSelected;
 	bool bIsPawnGrounded;
 	bool bIsPawnShotValid;
