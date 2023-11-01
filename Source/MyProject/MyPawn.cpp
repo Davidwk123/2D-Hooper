@@ -299,7 +299,7 @@ bool AMyBasketballPawn::IsPawnGrounded()
 {
 	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
 
-	if (PawnLocation2D.Y <= GROUND_HEIGHT && bIsPawnSelected == false)
+	if (PawnLocation2D.Y - PAWN_RADIUS <= GROUND_HEIGHT && bIsPawnSelected == false)
 	{
 		bIsPawnGrounded = true;
 	}

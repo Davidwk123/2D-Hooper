@@ -16,4 +16,13 @@ class MYPROJECT_API AMyProjectGameModeBase : public AGameModeBase
 
 public:
 	AMyProjectGameModeBase();
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	int RESOLUTION_X = 1920;
+	int RESOLUTION_Y = 1080;
+	int SCREEN_WIDTH_X = 1024;
+	int SCREEN_WIDTH_Y = 576;
 };
