@@ -17,10 +17,18 @@ class MYPROJECT_API AMyProjectGameModeBase : public AGameModeBase
 public:
 	AMyProjectGameModeBase();
 
+	void PlayBackgroundSound();
+
+	void StopBackgroundSound();
+
 protected:
 	virtual void BeginPlay() override;
 
 private:
+	// Background Sound
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* AudioComponent;
+
 	int RESOLUTION_X = 1920;
 	int RESOLUTION_Y = 1080;
 	int SCREEN_WIDTH_X = 1024;

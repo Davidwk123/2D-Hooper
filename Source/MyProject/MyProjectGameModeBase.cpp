@@ -3,17 +3,29 @@
 #include "MyProjectGameModeBase.h"
 #include "MyPlayerController.h"
 #include "MyPawn.h"
+#include "Components/AudioComponent.h"
 #include "GameFramework/GameUserSettings.h"
 
 AMyProjectGameModeBase::AMyProjectGameModeBase()
 {
 	PlayerControllerClass = AMyPlayerController::StaticClass();
+
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("BackgroundSound"));
+	AudioComponent->SetupAttachment(RootComponent);
+}
+
+void AMyProjectGameModeBase::PlayBackgroundSound()
+{
+	AudioComponent->Play();
+}
+
+void AMyProjectGameModeBase::StopBackgroundSound()
+{
+	AudioComponent->Stop();
 }
 
 void AMyProjectGameModeBase::BeginPlay()
 {
-	
-
 	FIntPoint ScreenResolution(RESOLUTION_X, RESOLUTION_Y);
 
 	//Set WindowedScreen resolution
@@ -26,6 +38,5 @@ void AMyProjectGameModeBase::BeginPlay()
 
 	GEngine->GameUserSettings->ApplySettings(true);
 
-
-	
+	AudioComponent->Stop();
 }

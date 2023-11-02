@@ -3,6 +3,7 @@
 #include "MyHUDWidget.h"
 #include "MyPlayerController.h"
 #include "MyPawn.h"
+#include "MyProjectGameModeBase.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/TextBlock.h"
@@ -13,6 +14,7 @@ void UMyHUDWidget::ClickPlay()
 {
 	AMyPlayerController* MyPlayerController = Cast<AMyPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
+	AMyProjectGameModeBase* GameMode = Cast<AMyProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
 	// Hide MainMenuWidget and Display Pause/Pawn Widgets
 	PausePanel->SetVisibility(ESlateVisibility::Collapsed);
@@ -24,6 +26,9 @@ void UMyHUDWidget::ClickPlay()
 	// Unpause game and make pawn moveable again after user clicks Play, also prevents user from pressing Pause during Main Menu screen
 	Ball->GetComponentByClass<UPaperSpriteComponent>()->SetMobility(EComponentMobility::Movable);
 	MyPlayerController->SetPause(false);
+
+	// Play Background Sound
+	GameMode->PlayBackgroundSound();
 }
 
 void UMyHUDWidget::ClickMenuQuit()
@@ -135,6 +140,7 @@ void UMyHUDWidget::ClickGameOverQuit()
 {
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
+	AMyProjectGameModeBase* GameMode = Cast<AMyProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
 	MainMenuWidget->SetVisibility(ESlateVisibility::Visible);
 
@@ -150,6 +156,8 @@ void UMyHUDWidget::ClickGameOverQuit()
 	Ball->ResetPawnValues();
 	Ball->GetComponentByClass<UPaperSpriteComponent>()->SetMobility(EComponentMobility::Stationary);
 	MyPlayerController->SetPause(false);
+
+	GameMode->StopBackgroundSound();
 }
 
 void UMyHUDWidget::NativeConstruct()
