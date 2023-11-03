@@ -16,7 +16,7 @@ AMyProjectGameModeBase::AMyProjectGameModeBase()
 
 void AMyProjectGameModeBase::PlayBackgroundSound()
 {
-	AudioComponent->Play();
+	AudioComponent->SetPaused(false);
 }
 
 void AMyProjectGameModeBase::StopBackgroundSound()
@@ -38,5 +38,5 @@ void AMyProjectGameModeBase::BeginPlay()
 
 	GEngine->GameUserSettings->ApplySettings(true);
 
-	AudioComponent->Stop();
+	AudioComponent->SetPaused(true);
 }

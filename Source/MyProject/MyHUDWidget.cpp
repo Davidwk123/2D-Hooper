@@ -4,6 +4,7 @@
 #include "MyPlayerController.h"
 #include "MyPawn.h"
 #include "MyProjectGameModeBase.h"
+#include "MyHUD.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/TextBlock.h"
@@ -13,6 +14,7 @@
 void UMyHUDWidget::ClickPlay()
 {
 	AMyPlayerController* MyPlayerController = Cast<AMyPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 	AMyProjectGameModeBase* GameMode = Cast<AMyProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
@@ -27,8 +29,10 @@ void UMyHUDWidget::ClickPlay()
 	Ball->GetComponentByClass<UPaperSpriteComponent>()->SetMobility(EComponentMobility::Movable);
 	MyPlayerController->SetPause(false);
 
-	// Play Background Sound
+	// Play Background/UI Sound
 	GameMode->PlayBackgroundSound();
+	HUD->PlayUISound();
+
 }
 
 void UMyHUDWidget::ClickMenuQuit()
@@ -78,6 +82,7 @@ void UMyHUDWidget::SetHighScore(int PawnScore)
 void UMyHUDWidget::ClickPause()
 {
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 
 	// Freezes everything in World
@@ -86,11 +91,14 @@ void UMyHUDWidget::ClickPause()
 	PausePanel->SetVisibility(ESlateVisibility::Visible);
 
 	PawnHelp->SetVisibility(ESlateVisibility::Hidden);
+
+	HUD->PlayUISound();
 }
 
 void UMyHUDWidget::ClickContinue()
 {
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 
 	// Unfreezes everything in World
@@ -99,11 +107,14 @@ void UMyHUDWidget::ClickContinue()
 	PawnHelp->SetVisibility(ESlateVisibility::Visible);
 
 	PausePanel->SetVisibility(ESlateVisibility::Hidden);
+
+	HUD->PlayUISound();
 }
 
 void UMyHUDWidget::ClickPauseQuit()
 {
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 
 	// Called again if function is called from losing all lives 
@@ -116,11 +127,14 @@ void UMyHUDWidget::ClickPauseQuit()
 	GameOverPanel->SetVisibility(ESlateVisibility::Visible);
 
 	SetHighScore(Ball->GetPawnScore());
+
+	HUD->PlayUISound();
 }
 
 void UMyHUDWidget::ClickPlayAgain()
 {
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 
 	PawnUserWidget->SetVisibility(ESlateVisibility::Visible);
@@ -134,11 +148,14 @@ void UMyHUDWidget::ClickPlayAgain()
 	Ball->ResetPawnDefaultPosition();
 	Ball->ResetPawnValues();
 	MyPlayerController->SetPause(false);
+
+	HUD->PlayUISound();
 }
 
 void UMyHUDWidget::ClickGameOverQuit()
 {
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 	AMyProjectGameModeBase* GameMode = Cast<AMyProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
@@ -155,9 +172,8 @@ void UMyHUDWidget::ClickGameOverQuit()
 	Ball->ResetPawnDefaultPosition();
 	Ball->ResetPawnValues();
 	Ball->GetComponentByClass<UPaperSpriteComponent>()->SetMobility(EComponentMobility::Stationary);
-	MyPlayerController->SetPause(false);
 
-	GameMode->StopBackgroundSound();
+	HUD->PlayUISound();
 }
 
 void UMyHUDWidget::NativeConstruct()
