@@ -20,6 +20,8 @@ public:
 
 	UMyHUDWidget* GetHUDWidget();
 
+	void PlayUISound();
+
 protected:
 	// Used to add new Widget from Blueprint
 	UPROPERTY(EditAnywhere)
@@ -31,5 +33,9 @@ protected:
 private:
 	// Stores new Widget from HUDWidgetClass
 	class UMyHUDWidget* HUDWidget;
+
+	// UI Sound
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* AudioComponent;
 
 };
