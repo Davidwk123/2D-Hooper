@@ -2,6 +2,7 @@
 
 #include "MyHoopActor.h"
 #include "MyPawn.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 AMyHoopActor::AMyHoopActor()
@@ -18,6 +19,9 @@ AMyHoopActor::AMyHoopActor()
 	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
 	TriggerBox->SetupAttachment(DefaultRoot);
 
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("BackgroundSound"));
+	AudioComponent->SetupAttachment(RootComponent);
+
 }
 
 void AMyHoopActor::OverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
@@ -28,6 +32,8 @@ void AMyHoopActor::OverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 	if (Ball)
 	{
 		Ball->PawnScored();
+
+		AudioComponent->Play();
 	}
 }
 
@@ -45,6 +51,8 @@ void AMyHoopActor::BeginPlay()
 
 	OnActorBeginOverlap.AddDynamic(this, &AMyHoopActor::OverlapBegin);
 	OnActorEndOverlap.AddDynamic(this, &AMyHoopActor::OverlapEnd);
+
+	AudioComponent->Stop();
 	
 }
 

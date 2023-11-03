@@ -26,6 +26,11 @@ public:
 	UFUNCTION()
 	void OverlapEnd(AActor* OverlappedActor, AActor* OtherActor);
 
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+private:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* DefaultRoot;
 
@@ -35,7 +40,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* TriggerBox;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	// Ball swish Sound
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* AudioComponent;
 };
