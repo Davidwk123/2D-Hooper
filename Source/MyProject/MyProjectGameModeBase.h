@@ -29,8 +29,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	UAudioComponent* AudioComponent;
 
+	// Other dimension that could work 954/536, 1103/617
 	int RESOLUTION_X = 1920;
 	int RESOLUTION_Y = 1080;
-	int SCREEN_WIDTH_X = 1024;
-	int SCREEN_WIDTH_Y = 576;
+	int SCREEN_WIDTH_X = 1103;
+	int SCREEN_WIDTH_Y = 617;
 };

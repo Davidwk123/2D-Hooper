@@ -148,7 +148,6 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 		{
 			CheckPawnBounceBefore();
 		}
-
 		CheckPawnBounceAfter();
 		
 		// Check that prevents Pawn from continously losing lives
