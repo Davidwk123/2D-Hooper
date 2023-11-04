@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
+#include "Components/AudioComponent.h"
 #include "MyHUDWidget.h"
 #include "MyHUD.h"
 
@@ -23,6 +24,9 @@ AMyBasketballPawn::AMyBasketballPawn()
 	SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComponent"));
 	SpriteComponent->SetupAttachment(RootComponent);
 
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("UISound"));
+	AudioComponent->SetupAttachment(RootComponent);
+
 	InputMapping = nullptr;
 	InputActions = nullptr;
 
@@ -34,6 +38,7 @@ AMyBasketballPawn::AMyBasketballPawn()
 	bDidPawnMiss = false;
 	bDidPawnRebound = false;
 	bIsPawnShotValid = false;
+	bDidPawnMakeNoise = false;
 
 	PawnLives = 3;
 	PawnScore = 0;
@@ -67,6 +72,8 @@ void AMyBasketballPawn::BeginPlay()
 	HUDWidget->SetScore(PawnScore);
 	// Starting PawnHelp Prompt
 	HUDWidget->SetHelp(FText::FromString(TEXT("Here we go!")));
+
+	AudioComponent->Stop();
 }
 
 void AMyBasketballPawn::SetPawnPosition(float PawnPositionX, float PawnPositionY)
@@ -98,6 +105,28 @@ void AMyBasketballPawn::PawnGameOver()
 	}
 }
 
+void AMyBasketballPawn::CheckPawnBounceBefore()
+{
+	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
+	
+	// Took out PAWN_RADIUS to get more percise check when Ball bounces 
+	if (PawnLocation2D.Y <= GROUND_HEIGHT && bIsPawnSelected == false)
+	{
+		AudioComponent->Play();
+		bDidPawnMakeNoise = true;
+	}
+}
+
+void AMyBasketballPawn::CheckPawnBounceAfter()
+{
+	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
+
+	if (PawnLocation2D.Y > GROUND_HEIGHT && bIsPawnSelected == false)
+	{
+		bDidPawnMakeNoise = false;
+	}
+}
+
 // Called every frame
 void AMyBasketballPawn::Tick(float DeltaTime)
 	{
@@ -114,6 +143,14 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 
 		IsPawnGrounded();
 
+		// Check that allows Pawn bouncing sound to play 
+		if (bDidPawnMakeNoise == false)
+		{
+			CheckPawnBounceBefore();
+		}
+
+		CheckPawnBounceAfter();
+		
 		// Check that prevents Pawn from continously losing lives
 		if (bDidPawnMiss == false)
 		{
@@ -124,6 +161,7 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 
 		/*FVector Velocity = SpriteComponent->GetComponentVelocity();
 		UE_LOG(LogTemp, Warning, TEXT("Actor Velocity: %s"), *Velocity.ToString());*/
+		//UE_LOG(LogTemp, Warning, TEXT("grounded: %s"), bIsPawnGrounded ? TEXT("true") : TEXT("false"));
 }
 
 // Called to bind functionality to input
@@ -303,7 +341,7 @@ bool AMyBasketballPawn::IsPawnGrounded()
 	{
 		bIsPawnGrounded = true;
 	}
-
+	
 	return bIsPawnGrounded;
 }
 

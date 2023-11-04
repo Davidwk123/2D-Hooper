@@ -26,12 +26,13 @@ public:
 	// Called when user clicks and drags Pawn
 	void MovePawn(const FInputActionValue& Value);
 
-	// Called when unclicks and drops Pawn
+	// Called when user unclicks and drops Pawn
 	void DropPawn(const FInputActionValue& Value);
 
 	// Called when user wants to reset Pawn's position
 	void ResetPawn(const FInputActionValue& Value);
 
+	// Called when user clicks "Play" or "Play again"
 	void ResetPawnDefaultPosition();
 
 	// Input Action that will call HUDWidget's ClickPause()
@@ -78,6 +79,10 @@ private:
 	UPROPERTY(EditAnywhere)
 	UPaperSpriteComponent* SpriteComponent;
 
+	// UI Sound
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* AudioComponent;
+
 	// Matches user input to InputActions
 	UPROPERTY(EditAnywhere)
 	class UInputMappingContext* InputMapping;
@@ -94,12 +99,17 @@ private:
 
 	void PawnGameOver();
 
+	// Checks when to play Ball bouncing sound
+	void CheckPawnBounceBefore();
+	void CheckPawnBounceAfter();
+
 	bool bIsPawnSelected;
 	bool bIsPawnGrounded;
 	bool bIsPawnShotValid;
 	bool bDidPawnScore;
 	bool bDidPawnMiss;
 	bool bDidPawnRebound;
+	bool bDidPawnMakeNoise;
 
 	int PawnLives;
 	int PawnScore;
