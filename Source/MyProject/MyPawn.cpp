@@ -4,7 +4,6 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "MyInputConfigData.h"
-#include "PaperTileMapActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
@@ -68,11 +67,16 @@ void AMyBasketballPawn::BeginPlay()
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
 	HUDWidget = HUD->GetHUDWidget();
-	HUDWidget->SetLives(PawnLives);
-	HUDWidget->SetScore(PawnScore);
-	// Starting PawnHelp Prompt
-	HUDWidget->SetHelp(FText::FromString(TEXT("Here we go!")));
 
+	// Null check
+	if (HUDWidget)
+	{
+		HUDWidget->SetLives(PawnLives);
+		HUDWidget->SetScore(PawnScore);
+		// Starting PawnHelp Prompt
+		HUDWidget->SetHelp(FText::FromString(TEXT("Here we go!")));
+	}
+	
 	AudioComponent->Stop();
 }
 

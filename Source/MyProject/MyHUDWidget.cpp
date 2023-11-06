@@ -41,8 +41,7 @@ void UMyHUDWidget::ClickMenuQuit()
 	UKismetSystemLibrary::QuitGame(GetWorld(), UGameplayStatics::GetPlayerController(this, 0), QuitPreference, true);
 }
 
-// The "if" and "define" allows the use of the "LOCTEXT" in the functions, which allow int values to be used with string values 
-#if WITH_EDITOR
+// The "define" allows the use of the "LOCTEXT" in the functions, which allow int values to be used with string values 
 #define LOCTEXT_NAMESPACE "UMG"
 void UMyHUDWidget::SetLives(int PawnLives)
 {
@@ -75,15 +74,13 @@ void UMyHUDWidget::SetHighScore(int PawnScore)
 		HighScore->SetText(FText::Format(LOCTEXT("CombinedTextKey", "\tScore: {0}"), PawnScore));
 	}
 }
-
 #undef LOCTEXT_NAMESPACE
-#endif
+
 
 void UMyHUDWidget::ClickPause()
 {
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
-	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 
 	// Freezes everything in World
 	MyPlayerController->SetPause(true);
@@ -99,7 +96,6 @@ void UMyHUDWidget::ClickContinue()
 {
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
-	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
 
 	// Unfreezes everything in World
 	MyPlayerController->SetPause(false);
@@ -157,7 +153,6 @@ void UMyHUDWidget::ClickGameOverQuit()
 	APlayerController* MyPlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	AMyHUD* HUD = Cast<AMyHUD>(MyPlayerController->GetHUD());
 	AMyBasketballPawn* Ball = Cast<AMyBasketballPawn>(MyPlayerController->GetPawn());
-	AMyProjectGameModeBase* GameMode = Cast<AMyProjectGameModeBase>(GetWorld()->GetAuthGameMode());
 
 	MainMenuWidget->SetVisibility(ESlateVisibility::Visible);
 

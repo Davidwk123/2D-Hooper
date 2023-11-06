@@ -31,11 +31,15 @@ void AMyHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
+	AudioComponent->Stop();
+}
+
+void AMyHUD::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 	// Creates new Widget from HUDWidgetClass
 	HUDWidget = CreateWidget<UMyHUDWidget>(GetWorld(), HUDWidgetClass);
 	HUDWidget->AddToViewport();
-
-	AudioComponent->Stop();
 }
 
 void AMyHUD::DrawHUD()
