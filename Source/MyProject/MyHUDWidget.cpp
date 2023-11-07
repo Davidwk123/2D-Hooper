@@ -71,7 +71,7 @@ void UMyHUDWidget::SetHighScore(int PawnScore)
 {
 	if (HighScore)
 	{
-		HighScore->SetText(FText::Format(LOCTEXT("CombinedTextKey", "\tScore: {0}"), PawnScore));
+		HighScore->SetText(FText::Format(LOCTEXT("CombinedTextKey", "Score: {0}"), PawnScore));
 	}
 }
 #undef LOCTEXT_NAMESPACE
