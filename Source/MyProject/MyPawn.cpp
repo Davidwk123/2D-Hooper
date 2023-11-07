@@ -48,17 +48,14 @@ AMyBasketballPawn::AMyBasketballPawn()
 void AMyBasketballPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	FVector PawnLocation = FVector(167.f, 30.f, 109.f);
-	SpriteComponent->SetWorldLocation(PawnLocation);
 	
-	FVector NewScale = FVector(.012f, 1.f, .012f);
+	FVector NewScale = FVector(SCALE, 1.f, SCALE);
 	SetActorScale3D(NewScale);
 	SpriteComponent->SetSimulatePhysics(true);
 	// Turn of CCD collisions to improve performance
 	SpriteComponent->SetUseCCD(false);
 	
-	float SpriteMass = 0.5f;
-	SpriteComponent->SetMassScale(NAME_None, SpriteMass);
+	SpriteComponent->SetMassScale(NAME_None, MASS);
 
 	// Set Pawn to be unmoveable, so user can not interact with pawn in main menu screen
 	SpriteComponent->SetMobility(EComponentMobility::Stationary);
@@ -109,23 +106,19 @@ void AMyBasketballPawn::PawnGameOver()
 	}
 }
 
-void AMyBasketballPawn::CheckPawnBounceBefore()
+void AMyBasketballPawn::CheckPawnBounceBefore(float PawnPositionY)
 {
-	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
-	
 	// Took out PAWN_RADIUS to get more percise check when Ball bounces 
-	if (PawnLocation2D.Y <= GROUND_HEIGHT && bIsPawnSelected == false)
+	if (PawnPositionY <= GROUND_HEIGHT && bIsPawnSelected == false)
 	{
 		AudioComponent->Play();
 		bDidPawnMakeNoise = true;
 	}
 }
 
-void AMyBasketballPawn::CheckPawnBounceAfter()
+void AMyBasketballPawn::CheckPawnBounceAfter(float PawnPositionY)
 {
-	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
-
-	if (PawnLocation2D.Y > GROUND_HEIGHT && bIsPawnSelected == false)
+	if (PawnPositionY > GROUND_HEIGHT && bIsPawnSelected == false)
 	{
 		bDidPawnMakeNoise = false;
 	}
@@ -143,28 +136,24 @@ void AMyBasketballPawn::Tick(float DeltaTime)
 		// Called when Pawn's velocity reaches max velocity 
 		ResetPawnVelocity();
 
-		PawnInsideShootingBoundary();
+		PawnInsideShootingBoundary(PawnPosition2D.X);
 
-		IsPawnGrounded();
+		IsPawnGrounded(PawnPosition2D.Y);
 
 		// Check that allows Pawn bouncing sound to play 
 		if (bDidPawnMakeNoise == false)
 		{
-			CheckPawnBounceBefore();
+			CheckPawnBounceBefore(PawnPosition2D.Y);
 		}
-		CheckPawnBounceAfter();
+		CheckPawnBounceAfter(PawnPosition2D.Y);
 		
 		// Check that prevents Pawn from continously losing lives
 		if (bDidPawnMiss == false)
 		{
-			PawnShotScenarios();
+			PawnShotScenarios(PawnPosition2D.X);
 		}
 
 		PawnGameOver();
-
-		/*FVector Velocity = SpriteComponent->GetComponentVelocity();
-		UE_LOG(LogTemp, Warning, TEXT("Actor Velocity: %s"), *Velocity.ToString());*/
-		//UE_LOG(LogTemp, Warning, TEXT("grounded: %s"), bIsPawnGrounded ? TEXT("true") : TEXT("false"));
 }
 
 // Called to bind functionality to input
@@ -336,11 +325,9 @@ bool AMyBasketballPawn::IsPawnSelected()
 	return bIsPawnSelected;
 }
 
-bool AMyBasketballPawn::IsPawnGrounded()
+bool AMyBasketballPawn::IsPawnGrounded(float PawnPositionY)
 {
-	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
-
-	if (PawnLocation2D.Y - PAWN_RADIUS <= GROUND_HEIGHT && bIsPawnSelected == false)
+	if (PawnPositionY - PAWN_RADIUS <= GROUND_HEIGHT && bIsPawnSelected == false)
 	{
 		bIsPawnGrounded = true;
 	}
@@ -373,12 +360,10 @@ void AMyBasketballPawn::ResetPawnValues()
 	HUDWidget->SetHelp(FText::FromString(TEXT("Here we go!")));
 }
 
-void AMyBasketballPawn::PawnShotScenarios()
+void AMyBasketballPawn::PawnShotScenarios(float PawnPositionX)
 {
-	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
-	
 	// Pawn's Radius is subtracted from Pawn location to prevent Pawn from losing a life if Pawn is on the Shooting Boundary 
-	if (PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded && bIsPawnShotValid && bDidPawnScore == false)
+	if (PawnPositionX - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded && bIsPawnShotValid && bDidPawnScore == false)
 	{
 		bDidPawnMiss = true;
 		PawnLives--;
@@ -388,13 +373,13 @@ void AMyBasketballPawn::PawnShotScenarios()
 		HUDWidget->SetHelp(FText::FromString(TEXT("Nice try!\n\nClick on screen to reset ball...")));
 	}
 	// Check for when Ball rebounds off the Wall/Hoop
-	else if (PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded == false && bIsPawnShotValid && bDidPawnScore == false)
+	else if (PawnPositionX - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded == false && bIsPawnShotValid && bDidPawnScore == false)
 	{
 		bDidPawnRebound = true;
 		HUDWidget->SetHelp(FText::FromString(TEXT("Shot is up...")));
 	}
 	// Display PawnHelp Text prompt in case shot is not valid 
-	else if(PawnLocation2D.X - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded && bDidPawnScore == false)
+	else if(PawnPositionX - PAWN_RADIUS > SHOOTING_BOUNDARY && bIsPawnGrounded && bDidPawnScore == false)
 	{
 		HUDWidget->SetHelp(FText::FromString(TEXT("Oops!\n\nClick on screen to reset ball...")));
 	}
@@ -407,11 +392,9 @@ void AMyBasketballPawn::PawnShotScenarios()
 	}
 }
 
-void AMyBasketballPawn::PawnInsideShootingBoundary()
+void AMyBasketballPawn::PawnInsideShootingBoundary(float PawnPositionX)
 {
-	FVector2d PawnLocation2D(SpriteComponent->GetComponentLocation().X, SpriteComponent->GetComponentLocation().Z);
-
-	if (PawnLocation2D.X <= SHOOTING_BOUNDARY)
+	if (PawnPositionX <= SHOOTING_BOUNDARY)
 	{
 		// Checks for when Ball rebounds off the Wall/Hoop and makes it back to the Shooting Boundary
 		if (bDidPawnRebound && bDidPawnScore == false && bIsPawnGrounded)

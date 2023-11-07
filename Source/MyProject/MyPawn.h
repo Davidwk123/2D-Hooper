@@ -50,7 +50,7 @@ public:
 	bool IsPawnSelected();
 
 	// If Pawn is on the ground
-	bool IsPawnGrounded();
+	bool IsPawnGrounded(float PawnPositionY);
 
 	// Adds to Score
 	void PawnScored();
@@ -59,10 +59,10 @@ public:
 	void ResetPawnValues();
 
 	// Defines different cases when the Ball gets shot
-	void PawnShotScenarios();
+	void PawnShotScenarios(float PawnPositionX);
 
 	// Called when Ball is either reset or bounces back inside Boundary
-	void PawnInsideShootingBoundary();
+	void PawnInsideShootingBoundary(float PawnPositionX);
 
 
 protected:
@@ -100,8 +100,8 @@ private:
 	void PawnGameOver();
 
 	// Checks when to play Ball bouncing sound
-	void CheckPawnBounceBefore();
-	void CheckPawnBounceAfter();
+	void CheckPawnBounceBefore(float PawnPositionY);
+	void CheckPawnBounceAfter(float PawnPositionY);
 
 	bool bIsPawnSelected;
 	bool bIsPawnGrounded;
@@ -127,5 +127,7 @@ private:
 	const float SPRING_CONSTANT = 500.f;
 	const float DRAG_CONSTANT = 16.67f;
 	const float MAX_VELOCITY = 630.f;
+	const float SCALE = .012f;
+	const float MASS = .5f;
 
 };
