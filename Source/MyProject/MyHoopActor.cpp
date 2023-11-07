@@ -8,7 +8,7 @@
 AMyHoopActor::AMyHoopActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	SetRootComponent(DefaultRoot);
@@ -55,11 +55,3 @@ void AMyHoopActor::BeginPlay()
 	AudioComponent->Stop();
 	
 }
-
-// Called every frame
-void AMyHoopActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-

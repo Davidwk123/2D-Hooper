@@ -8,6 +8,8 @@
 
 AMyHUD::AMyHUD()
 {
+	SetActorTickEnabled(false);
+
 	HUDWidgetClass = nullptr;
 	HUDWidget = nullptr;
 

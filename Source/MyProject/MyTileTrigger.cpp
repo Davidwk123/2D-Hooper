@@ -9,6 +9,8 @@
 AMyTileTrigger::AMyTileTrigger()
 {
 
+	SetActorTickEnabled(false);
+
 	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	SetRootComponent(DefaultRoot);
 
@@ -28,12 +30,6 @@ void AMyTileTrigger::BeginPlay()
 	OnActorBeginOverlap.AddDynamic(this, &AMyTileTrigger::OverlapBegin);
 	OnActorEndOverlap.AddDynamic(this, &AMyTileTrigger::OverlapEnd);
 	
-}
-
-// Called every frame
-void AMyTileTrigger::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void AMyTileTrigger::OverlapBegin(AActor* OverlappedActor, AActor* OtherActor)

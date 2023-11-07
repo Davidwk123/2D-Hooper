@@ -17,9 +17,6 @@ public:
 	// Sets default values for this actor's properties
 	AMyHoopActor();
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	UFUNCTION()
 	void OverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
 

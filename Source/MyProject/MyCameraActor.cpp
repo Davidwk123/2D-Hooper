@@ -6,7 +6,7 @@
 
 AMyCameraActor::AMyCameraActor()
 {
-
+	SetActorTickEnabled(false);
 }
 
 void AMyCameraActor::BeginPlay()

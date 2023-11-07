@@ -8,6 +8,8 @@
 
 AMyProjectGameModeBase::AMyProjectGameModeBase()
 {
+	SetActorTickEnabled(false);
+
 	PlayerControllerClass = AMyPlayerController::StaticClass();
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("BackgroundSound"));

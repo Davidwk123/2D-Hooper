@@ -10,22 +10,11 @@
 
 AMyPlayerController::AMyPlayerController()
 {
+    SetActorTickEnabled(false);
 }
 
 void AMyPlayerController::BeginPlay()
 {
     Super::BeginPlay();
     this->bShowMouseCursor = true;
-
 }
-
-void AMyPlayerController::Tick(float DeltaTime)
-{
-
-}
-
-void AMyPlayerController::SetupInputComponent()
-{
-
-}
-

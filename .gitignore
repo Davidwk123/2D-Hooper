@@ -2,6 +2,8 @@ Binaries
 DerivedDataCache
 Intermediate
 Saved
+CookerOpenOrder.log
+EditorOpenOrder.log
 .vscode
 .vs
 *.VC.db

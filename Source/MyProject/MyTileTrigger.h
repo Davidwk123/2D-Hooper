@@ -21,8 +21,6 @@ public:
 	// Sets default values for this actor's properties
 	AMyTileTrigger();
 
-	virtual void Tick(float DeltaTime) override;
-
 	UFUNCTION()
 	void OverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
 
