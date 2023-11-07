@@ -6,7 +6,6 @@
 #include "GameFramework/Pawn.h"
 #include "PaperSpriteComponent.h"
 #include "InputActionValue.h"
-#include "Blueprint/UserWidget.h"
 #include "MyHUDWidget.h"
 #include "MyPawn.generated.h"
 
@@ -23,29 +22,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called when user clicks and drags Pawn
-	void MovePawn(const FInputActionValue& Value);
-
-	// Called when user unclicks and drops Pawn
-	void DropPawn(const FInputActionValue& Value);
-
-	// Called when user wants to reset Pawn's position
-	void ResetPawn(const FInputActionValue& Value);
-
 	// Called when user clicks "Play" or "Play again"
 	void ResetPawnDefaultPosition();
 
-	// Input Action that will call HUDWidget's ClickPause()
-	void PressPause(const FInputActionValue& Value);
-
-	// Mechanic for when user clicks and drags Pawn
-	FVector GetSpringForce(FVector2d MousePosition);
-
 	int GetPawnScore();
 
-	// Called to reset velocity of Pawn to prevent it from clipping out of bounds
-	void ResetPawnVelocity(float Drag = 0.f);
-	
 	// If Pawn is clicked by user
 	bool IsPawnSelected();
 
@@ -57,13 +38,6 @@ public:
 
 	// Reset Pawn's values to default 
 	void ResetPawnValues();
-
-	// Defines different cases when the Ball gets shot
-	void PawnShotScenarios(float PawnPositionX);
-
-	// Called when Ball is either reset or bounces back inside Boundary
-	void PawnInsideShootingBoundary(float PawnPositionX);
-
 
 protected:
 	// Called when the game starts or when spawned
@@ -92,6 +66,30 @@ private:
 
 	// Stores new Widget from HUDWidget
 	class UMyHUDWidget* HUDWidget;
+
+	// Called when user clicks and drags Pawn
+	void MovePawn(const FInputActionValue& Value);
+
+	// Called when user unclicks and drops Pawn
+	void DropPawn(const FInputActionValue& Value);
+
+	// Called when user wants to reset Pawn's position
+	void ResetPawn(const FInputActionValue& Value);
+
+	// Input Action that will call HUDWidget's ClickPause()
+	void PressPause(const FInputActionValue& Value);
+
+	// Mechanic for when user clicks and drags Pawn
+	FVector GetSpringForce(FVector2d MousePosition);
+
+	// Called to reset velocity of Pawn to prevent it from clipping out of bounds
+	void ResetPawnVelocity(float Drag = 0.f);
+
+	// Defines different cases when the Ball gets shot
+	void PawnShotScenarios(float PawnPositionX);
+
+	// Called when Ball is either reset or bounces back inside Boundary
+	void PawnInsideShootingBoundary(float PawnPositionX);
 
 	void SetPawnPosition(float PawnPositionX, float PawnPositionY);
 	

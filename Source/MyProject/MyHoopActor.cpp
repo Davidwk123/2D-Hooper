@@ -37,10 +37,6 @@ void AMyHoopActor::OverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 	}
 }
 
-void AMyHoopActor::OverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
-{
-}
-
 // Called when the game starts or when spawned
 void AMyHoopActor::BeginPlay()
 {
@@ -50,7 +46,6 @@ void AMyHoopActor::BeginPlay()
 	SetActorScale3D(NewScale);
 
 	OnActorBeginOverlap.AddDynamic(this, &AMyHoopActor::OverlapBegin);
-	OnActorEndOverlap.AddDynamic(this, &AMyHoopActor::OverlapEnd);
 
 	AudioComponent->Stop();
 	

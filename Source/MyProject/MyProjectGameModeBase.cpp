@@ -1,16 +1,12 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MyProjectGameModeBase.h"
-#include "MyPlayerController.h"
-#include "MyPawn.h"
 #include "Components/AudioComponent.h"
 #include "GameFramework/GameUserSettings.h"
 
 AMyProjectGameModeBase::AMyProjectGameModeBase()
 {
 	SetActorTickEnabled(false);
-
-	PlayerControllerClass = AMyPlayerController::StaticClass();
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("BackgroundSound"));
 	AudioComponent->SetupAttachment(RootComponent);
@@ -19,11 +15,6 @@ AMyProjectGameModeBase::AMyProjectGameModeBase()
 void AMyProjectGameModeBase::PlayBackgroundSound()
 {
 	AudioComponent->SetPaused(false);
-}
-
-void AMyProjectGameModeBase::StopBackgroundSound()
-{
-	AudioComponent->Stop();
 }
 
 void AMyProjectGameModeBase::BeginPlay()

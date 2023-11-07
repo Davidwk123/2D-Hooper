@@ -2,11 +2,6 @@
 
 
 #include "MyPlayerController.h"
-#include "MyHUDWidget.h"
-#include "MyHUD.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
-#include "MyInputConfigData.h"
 
 AMyPlayerController::AMyPlayerController()
 {

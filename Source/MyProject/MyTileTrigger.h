@@ -21,12 +21,11 @@ public:
 	// Sets default values for this actor's properties
 	AMyTileTrigger();
 
-	UFUNCTION()
-	void OverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	void OverlapEnd(AActor* OverlappedActor, AActor* OtherActor);
-
+private:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* DefaultRoot;
 
@@ -36,8 +35,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* TriggerBox;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UFUNCTION()
+	void OverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
 
+	UFUNCTION()
+	void OverlapEnd(AActor* OverlappedActor, AActor* OtherActor);
 };

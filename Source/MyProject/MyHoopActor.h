@@ -16,13 +16,7 @@ class MYPROJECT_API AMyHoopActor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AMyHoopActor();
-
-	UFUNCTION()
-	void OverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
-
-	UFUNCTION()
-	void OverlapEnd(AActor* OverlappedActor, AActor* OtherActor);
-
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,4 +34,7 @@ private:
 	// Ball swish Sound
 	UPROPERTY(EditAnywhere)
 	UAudioComponent* AudioComponent;
+
+	UFUNCTION()
+	void OverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
 };

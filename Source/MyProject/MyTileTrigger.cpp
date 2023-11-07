@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "MyTileTrigger.h"
 #include "PaperTileMapComponent.h"
 #include "MyPawn.h"

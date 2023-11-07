@@ -28,8 +28,10 @@ protected:
 	TSubclassOf<class UMyHUDWidget> HUDWidgetClass;
 
 	virtual void BeginPlay() override;
+
 	// This function runs before BeginPlay() and the other Actors, this will allow the HUDWidget to be intialized first so that it can be refrenced by other Actors
 	virtual void PostInitializeComponents() override;
+
 	virtual void DrawHUD() override;
 
 private:
