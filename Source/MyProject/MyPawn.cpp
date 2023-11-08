@@ -421,5 +421,4 @@ void AMyBasketballPawn::PawnInsideShootingBoundary(float PawnPositionX)
 		bDidPawnMiss = false;
 		bDidPawnScore = false;
 	}
-
 }

@@ -14,3 +14,6 @@ EditorOpenOrder.log
 *.suo
 *.xcodeproj
 *.xcworkspace
+Build/Windows/FileOpenOrder/CookerOpenOrder.log
+*.log
+Build/Windows/FileOpenOrder/EditorOpenOrder.log
