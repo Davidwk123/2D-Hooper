@@ -8,3 +8,5 @@ Click and drag ball to shoot. Goal is to make as much shots as possible before l
 Press "Esc"/"P" key to pause game
 
 Download on itch.io to play: https://davidwk1738.itch.io/2d-hooper
+
+I did not create the game assets. The Game asset credits are listed on the itch.io link
